@@ -1,0 +1,50 @@
+﻿@model IEnumerable<ECommerceWeb.Models.Products>  
+  
+@{  
+    ViewData["Title"] = "Home Page";  
+}  
+  
+<h4 class="text-center text-uppercase">List of Products</h4>  
+  
+<p>  
+    <a asp-action="ProductForm" class="btn btn-sm btn-primary rounded-0 text-uppercase"><i class="fas fa-plus-circle"></i> Add New</a>  
+</p>  
+<table class="table table-bordered">  
+    <thead>  
+        <tr>  
+            <th>@Html.DisplayNameFor(model => model.ProductId)</th>
+            <th>@Html.DisplayNameFor(model => model.ProductPicture)</th>
+            <th>@Html.DisplayNameFor(model => model.ProductName)</th>  
+            <th>@Html.DisplayNameFor(model => model.Price)</th>  
+            <th>@Html.DisplayNameFor(model => model.ProductCategory)</th>  
+            <th>@Html.DisplayNameFor(model => model.InStock)</th>  
+        </tr>  
+    </thead>  
+    <tbody>  
+        @foreach (var product in Model)  
+        {  
+            <tr>
+                <td>
+                    @product.ProductId
+                </td>
+
+                <td>  
+                    <img src="~/images/@product.ProductPicture"   
+                         class="rounded-circle"   
+                         height="40" width="40"   
+                         asp-append-version="true" /> 
+                </td>
+                <td>
+                    @product.ProductName  
+                </td>  
+                <td>@product.Price</td>  
+                <td>@product.ProductCategoryId</td> 
+                <td>@product.InStock</td>  
+                 <td>
+                    <a href="@Url.Action("GetProductInfo","Product", new { proid = @product.ProductId })">Edit </a> /
+                    <a href="/Product/DeleteProduct?productId=@product.ProductId">Delete</a>
+                </td>
+            </tr>  
+        }  
+    </tbody>  
+</table>   
