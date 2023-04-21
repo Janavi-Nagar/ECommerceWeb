@@ -14,6 +14,7 @@ builder.Services.AddDbContext<UserDbContext>(options =>
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<UserDbContext>();
+builder.Services.AddSession();
 builder.Services.AddTransient<IEmailSender, SendEmail>();
 builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
 
@@ -31,7 +32,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

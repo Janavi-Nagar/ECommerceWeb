@@ -1,4 +1,5 @@
 ﻿using ECommerceWeb.Data;
+using ECommerceWeb.Interface;
 using ECommerceWeb.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,18 +11,28 @@ namespace ECommerceWeb.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly UserDbContext dbContext;
-        public HomeController(ILogger<HomeController> logger, UserDbContext context)
+        private readonly IProductService _productService;
+        public HomeController(ILogger<HomeController> logger, UserDbContext context, IProductService productService)
         {
             _logger = logger;
              dbContext = context;
+            _productService = productService;
         }
 
-
-        [Authorize]
-        public IActionResult Index()
+       
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var product = await _productService.GetProducts();
+            ViewBag.Productcategory = await _productService.GetProductCategory();
+            return View(product);
         }
+        [HttpGet]
+        public async Task<IActionResult> Details(string proid)
+        {
+            ViewBag.Productcategory = await _productService.GetProductCategory();
+            return View("Details", await _productService.GetProducyInfo(proid));
+        }
+
         public IActionResult Privacy()
         {
             return View();

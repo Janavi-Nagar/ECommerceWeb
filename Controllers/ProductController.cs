@@ -1,4 +1,5 @@
 ﻿using ECommerceWeb.Interface;
+using ECommerceWeb.Models;
 using ECommerceWeb.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +13,7 @@ namespace ECommerceWeb.Controllers
         {
             _productService = productService;
         }
+       
         public async Task<IActionResult> Product()
         {
             var product = await _productService.GetProducts();

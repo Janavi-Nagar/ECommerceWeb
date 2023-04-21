@@ -1,7 +1,6 @@
 ﻿using ECommerceWeb.Data;
 using ECommerceWeb.Interface;
 using ECommerceWeb.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceWeb.Service
 {

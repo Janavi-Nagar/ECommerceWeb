@@ -1,0 +1,52 @@
+﻿@model ECommerceWeb.Models.ViewModels.ProductViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div>
+    <h4>Products</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ProductName)
+             </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ProductName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ProductCategoryId)
+        </dt>
+         <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ProductCategoryId)
+        </dd>
+         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.InStock)
+        </dt>
+         <dd class="col-sm-10">
+            @Model.InStock
+            
+        </dd>
+        
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ProductPicture)
+        </dt>
+        <dd class = "col-sm-10">
+            <img src="~/images/@Model.ProductImage"   
+                            
+                         height="300" width="300"   
+                         asp-append-version="true" />
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-controller="cart" asp-action="buy" asp-route-id="@Model.ProductId">Add to Cart</a> |
+   
+</div>
