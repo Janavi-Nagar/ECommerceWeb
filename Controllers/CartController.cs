@@ -16,17 +16,27 @@ namespace ECommerceWeb.Controllers
             DbContext = userDbContext;
         }
 
-        [Route("index")]
-        public IActionResult Index()
+        [Route("cart")]
+        public IActionResult Cart()
         {
             var cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
+            int no = 0;
+            if(cart != null)
+            {
+                no = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart").Count();
+                //ViewBag.no = no;
+            }
+            
             ViewBag.cart = cart;
             ViewBag.total = cart.Sum(item => item.Products.Price * item.Quantity);
+            
             return View();
         }
 
         [Route("buy/{ProductId}")]
         public IActionResult Buy(Guid ProductId)
+        
+        
         {
             // Add to cart
 
@@ -54,7 +64,7 @@ namespace ECommerceWeb.Controllers
                 }
                 SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Cart");
         }
 
         [Route("remove/{ProductId}")]

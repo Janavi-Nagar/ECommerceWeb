@@ -4,50 +4,37 @@
     ViewData["Title"] = "Home Page";  
 }  
   
-<h4 class="text-center text-uppercase">Products</h4>  
-  
-<table>  
-  <td>
-       
-        @foreach (var product in Model)  
+<div class="d-flex flex-row">
+   
+      @foreach (var product in Model)  
         { 
-         
-            <tr>
-             <td>  
-                    <img src="~/images/@product.ProductPicture"   
+            <div class="p-2">
+                <table>
+                    <tr>
+                     <td>  
+                            <img src="~/images/@product.ProductPicture"   
                             
-                         height="300" width="300"   
-                         asp-append-version="true" /> 
-             </td>
-            </tr>
-            <tr>
-               
-                <th>@Html.DisplayNameFor(model => model.ProductName)</th>
-                <td>
-                    @product.ProductName  
-                </td> 
-            </tr>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.Price)</th> 
-                <td>@product.Price</td> 
-            </tr>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.ProductCategory)</th>
-                <td>@product.ProductCategory.Name</td> 
-            </tr>
-            @*<tr>
-                <th>@Html.DisplayNameFor(model => model.InStock)</th>
-                <td>@product.InStock</td>  
-            </tr>*@
-            <tr>
-                 <td>
-                    <a href="/Home/Details?proid=@product.ProductId">Go to View</a>
-                </td>
-            </tr> 
+                                 height="300" width="300"   
+                                 asp-append-version="true" /> 
+                     </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @product.ProductName  
+                        </td> 
+                    </tr>
+                    <tr>
+                        <td>&#8377; @product.Price</td> 
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/Home/Details?productId=@product.ProductId"> Go to View </a> |
+                            <a asp-controller="cart" asp-action="buy" asp-route-id="@product.ProductId">Add to Cart</a>    
+                        </td>
+                    </tr>
+                </table> 
+            </div>
+        } 
       
-        }  
-        
-    </td>
-    
-</table>   
-
+   
+</div>

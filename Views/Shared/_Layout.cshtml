@@ -3,38 +3,112 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ECommerceWeb</title>
+    <title>@ViewData["Title"] - Rander's Shop</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ECommerceWeb.styles.css" asp-append-version="true" />
 </head>
 <body>
+
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ECommerceWeb</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+        <div class="overlay"></div>
+
+        <div class="utility-nav d-none d-md-block">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <p class="small">
+                            <i class="bx bx-envelope"></i> shop@randers.com | <i class="bx bx-phone"></i> +91-9876543210
+                        </p>
+                    </div>
+
+                    <div class="col-12 col-md-6 text-right">
+                        <p class="small">Free shipping on total of 499 of all products</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="navbar navbar-expand-md navbar-light bg-light main-menu" style="box-shadow:none">
+            <div class="container">
+
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <h4 class="font-weight-bold">Rander's Shop</h4>
+                </a>
+
+                <div class="collapse navbar-collapse">
+                    <form class="form-inline my-2 my-lg-0 mx-auto">
+                        <div class="d-flex flex-row">
+                            <div class="p-2">
+                                <input class="form-control" type="search" placeholder="Search for products..." aria-label="Search">
+                            </div>
+                            <div class="p-2">
+                                <button class="btn btn-success my-2 my-sm-0" type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <ul class="navbar-nav">
+                        <li class="nav-item ml-md-3">
+                            <a>
+                                @*<i class="bx bxs-user-circle mr-1"></i>*@
+                                <partial name="_LoginPartial" />
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ml-auto">
+                        <li>
+                            <a asp-controller="cart" asp-action="Cart">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                                    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                                </svg>
+                            </a><h6 id="value">0</h6>@*@ViewBag.no  *@
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+
+        <nav class="navbar navbar-expand-md navbar-light bg-light sub-menu">
+            <div class="container">
+                <div class="collapse navbar-collapse" id="navbar">
+                    <ul class="navbar-nav mx-auto">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Product">Product</a>
                         </li>
-                         <li class="nav-item">
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="ProductCategory" asp-action="ProductCategoryList">ProductCategory</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">Publishers</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link  text-dark dropdown-toggle" asp-area="" asp-controller="" asp-action="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Support
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Delivery Information</a>
+                                <a class="dropdown-item" href="#">Privacy Policy</a>
+                                <a class="dropdown-item" href="#">Terms & Conditions</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link  text-dark" href="#">Contact</a>
+                        </li>
                     </ul>
-                   
                 </div>
             </div>
-            <partial name="_LoginPartial" />
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -49,6 +123,22 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        $(document).ready(function(){
+             $.ajax({
+                url: '@Url.Action("NoOfCartProduct","Home")',
+                type: "GET",
+                success: function (data) {
+                    $("#value").text(data);
+                },
+                error: function (error) {
+                    console.log(`Error ${error}`);
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>

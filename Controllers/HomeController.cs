@@ -1,4 +1,5 @@
 ﻿using ECommerceWeb.Data;
+using ECommerceWeb.Helpers;
 using ECommerceWeb.Interface;
 using ECommerceWeb.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -19,18 +20,38 @@ namespace ECommerceWeb.Controllers
             _productService = productService;
         }
 
-       
+       public int NoOfCartProduct()
+        {
+            var cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
+            int no = 0;
+            if (cart != null)
+            {
+                no = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart").Count();
+             }
+            return no;
+        }
         public async Task<IActionResult> Index()
         {
+            try { 
             var product = await _productService.GetProducts();
-            ViewBag.Productcategory = await _productService.GetProductCategory();
+               //int no = NoOfCartProduct();
+               // ViewBag.no = no;
+                ViewBag.Productcategory = await _productService.GetProductCategory();
             return View(product);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(string.Format("Excellent description goes here about the exception. Happened for client"), ex);
+                return View(Privacy);
+            }
         }
         [HttpGet]
-        public async Task<IActionResult> Details(string proid)
+        public async Task<IActionResult> Details(string productId)
         {
+            int no = NoOfCartProduct();
+            ViewBag.no = no;
             ViewBag.Productcategory = await _productService.GetProductCategory();
-            return View("Details", await _productService.GetProducyInfo(proid));
+            return View("Details", await _productService.GetProductInfo(productId));
         }
 
         public IActionResult Privacy()

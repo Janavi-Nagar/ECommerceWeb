@@ -22,11 +22,11 @@ namespace ECommerceWeb.Service
         {
             return await dbContext.Products.ToListAsync();
         }
-        public async Task<ProductViewModel> GetProducyInfo(string prductid)
+        public async Task<ProductViewModel> GetProductInfo(string Id)
         {
-            var prdtid = new Guid(prductid);
+            var productid = new Guid(Id);
             ProductViewModel productViewModel = new ProductViewModel();
-            var product = await dbContext.Products.FirstOrDefaultAsync(m => m.ProductId == prdtid);
+            var product = await dbContext.Products.FirstOrDefaultAsync(m => m.ProductId == productid);
             if (product != null)
             {
                 productViewModel.ProductId = product.ProductId;

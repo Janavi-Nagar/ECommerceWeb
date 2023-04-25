@@ -28,10 +28,10 @@ namespace ECommerceWeb.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetProductInfo(string proid)
+        public async Task<IActionResult> GetProductInfo(string productId)
         {
             ViewBag.Productcategory = await _productService.GetProductCategory();
-            return View("ProductForm", await _productService.GetProducyInfo(proid));
+            return View("ProductForm", await _productService.GetProductInfo(productId));
         }
         [HttpPost]
         public async Task<IActionResult> ProductForm(ProductViewModel model)

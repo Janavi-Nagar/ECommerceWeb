@@ -41,7 +41,7 @@
                 <td>@product.ProductCategoryId</td> 
                 <td>@product.InStock</td>  
                  <td>
-                    <a href="@Url.Action("GetProductInfo","Product", new { proid = @product.ProductId })">Edit </a> /
+                    <a href="@Url.Action("GetProductInfo","Product", new { productId = @product.ProductId })">Edit </a> /
                     <a href="/Product/DeleteProduct?productId=@product.ProductId">Delete</a>
                 </td>
             </tr>  
