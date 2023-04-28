@@ -1,19 +1,30 @@
 ﻿using ECommerceWeb.Data;
 using ECommerceWeb.Helpers;
+using ECommerceWeb.Interface;
 using ECommerceWeb.Models;
-using ECommerceWeb.Models.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ECommerceWeb.Controllers
 {
     [Route("cart")]
     public class CartController : Controller
     {
-        private readonly UserDbContext DbContext;
+        private readonly IProductService _productService;
+        private readonly ICartService _cartService;
+        private readonly UserManager<IdentityUser> userManager;
 
-        public CartController(UserDbContext userDbContext)
+        public CartController(IProductService productService, ICartService cartService, UserManager<IdentityUser> UserManager)
         {
-            DbContext = userDbContext;
+            _productService = productService;
+            _cartService = cartService;
+            userManager = UserManager;
+        }
+        public async Task<IActionResult> CartProducts()
+        {
+            var data = _cartService.GetCartProducts();
+            return PartialView("_CartData", data);
         }
 
         [Route("cart")]
@@ -24,47 +35,77 @@ namespace ECommerceWeb.Controllers
             if(cart != null)
             {
                 no = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart").Count();
-                //ViewBag.no = no;
+                ViewBag.cart = cart;
+                ViewBag.total = cart.Sum(item => item.Products.Price * item.Quantity);
             }
-            
-            ViewBag.cart = cart;
-            ViewBag.total = cart.Sum(item => item.Products.Price * item.Quantity);
-            
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var UserCart = _cartService.GetCartByUserId(userId);
+                ViewBag.cart = UserCart;
+                ViewBag.total = UserCart.Sum(item => item.Products.Price * item.Quantity);
+            }
+           
             return View();
         }
 
-        [Route("buy/{ProductId}")]
-        public IActionResult Buy(Guid ProductId)
-        
-        
+        //[Route("Buy/{Pid}")]
+        [HttpGet]
+        public IActionResult Buy(string Pid)
         {
-            // Add to cart
-
-            ProductViewModel productModel = new ProductViewModel();
-            object result = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
-            var data = DbContext.Products.FirstOrDefault(m => m.ProductId == ProductId);
+            var ProductId = new Guid(Pid);
+            var data = _productService.GetProductById(ProductId);
+            List<CartItem> cart = new List<CartItem>();
             if (SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart") == null)
             {
-                List<CartItem> cart = new List<CartItem>();
                 cart.Add(new CartItem { Products = data, Quantity = 1 });
                 SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
+                if (User.Identity.IsAuthenticated)
+                {
+                    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    Cart model = new Cart();
+                    model.ProductId = ProductId;
+                    model.Quantity = 1;
+                    model.TotalPrice = model.Quantity * data.Price;
+                    model.UserId = userId;
+                    var ret = _cartService.SaveCartProduct(model);
+                }
             }
             else
             {
-                List<CartItem> cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
+                cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
                 string proid = ProductId.ToString();
                 int index = isExist(proid);
                 if (index != 1)
                 {
                     cart[index].Quantity++;
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                        Cart model = new Cart();
+                        model.ProductId = ProductId;
+                        model.UserId = userId;
+                        var ret = _cartService.SaveCartProduct(model);
+                    }
                 }
                 else
                 {
                     cart.Add(new CartItem { Products = data, Quantity = 1 });
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                        Cart model = new Cart();
+                        model.ProductId = ProductId;
+                        model.Quantity = 1;
+                        model.TotalPrice = model.Quantity * data.Price;
+                        model.UserId = userId;
+                        var ret = _cartService.SaveCartProduct(model);
+                    }
                 }
                 SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
             }
-            return RedirectToAction("Cart");
+           // return RedirectToAction("Index", "Home");
+            return Json(cart.Count());
         }
 
         [Route("remove/{ProductId}")]
@@ -76,7 +117,15 @@ namespace ECommerceWeb.Controllers
             
             cart.RemoveAt(index);
             SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
-            return RedirectToAction("Index");
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                Cart model = new Cart();
+                model.UserId = userId;
+                model.ProductId = ProductId;
+                var ret = _cartService.DeleteCartProduct(model);
+            }
+            return RedirectToAction("Index", "Home");
         }
 
         private int isExist(string proid)

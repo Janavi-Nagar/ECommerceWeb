@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceWeb.Data;
 
-public class ECommerceWebContext : IdentityDbContext<ECommerceWebUser>
+public class ECommerceWebContext : IdentityDbContext<ApplicationUser>
 {
     public ECommerceWebContext(DbContextOptions<ECommerceWebContext> options)
         : base(options)

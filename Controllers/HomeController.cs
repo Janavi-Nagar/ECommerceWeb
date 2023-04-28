@@ -30,12 +30,11 @@ namespace ECommerceWeb.Controllers
              }
             return no;
         }
+       
         public async Task<IActionResult> Index()
         {
             try { 
             var product = await _productService.GetProducts();
-               //int no = NoOfCartProduct();
-               // ViewBag.no = no;
                 ViewBag.Productcategory = await _productService.GetProductCategory();
             return View(product);
             }
@@ -45,11 +44,10 @@ namespace ECommerceWeb.Controllers
                 return View(Privacy);
             }
         }
+       
         [HttpGet]
         public async Task<IActionResult> Details(string productId)
         {
-            int no = NoOfCartProduct();
-            ViewBag.no = no;
             ViewBag.Productcategory = await _productService.GetProductCategory();
             return View("Details", await _productService.GetProductInfo(productId));
         }

@@ -20,6 +20,6 @@ public class UserDbContext : IdentityDbContext<IdentityUser>
         // Add your customizations after calling base.OnModelCreating(builder);
     }
     public DbSet<Products> Products { get; set; }
-    //public DbSet<ProductDetails> ProductDetails { get; set; }
     public DbSet<ProductCategory> ProductCategory { get; set; }
+    public DbSet<Cart> Cart { get; set; }
 }

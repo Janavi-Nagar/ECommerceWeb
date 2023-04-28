@@ -17,7 +17,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddSession();
 builder.Services.AddTransient<IEmailSender, SendEmail>();
 builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
-
+builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddTransient<IProductService, ProductService>();
 
 // Add services to the container.

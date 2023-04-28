@@ -22,6 +22,12 @@ namespace ECommerceWeb.Service
         {
             return await dbContext.Products.ToListAsync();
         }
+
+        public Products GetProductById(Guid ProductId)
+        {
+            var product = dbContext.Products.FirstOrDefault(m => m.ProductId == ProductId);
+            return product ;
+        }
         public async Task<ProductViewModel> GetProductInfo(string Id)
         {
             var productid = new Guid(Id);
@@ -141,5 +147,6 @@ namespace ECommerceWeb.Service
         {
             return await dbContext.ProductCategory.ToListAsync();
         }
+
     }
 }

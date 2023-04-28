@@ -1,11 +1,11 @@
 ﻿@model IEnumerable<ECommerceWeb.Models.Products>  
   
-@{  
-    ViewData["Title"] = "Home Page";  
+@{
+    ViewData["Title"] = "Home Page";
 }  
   
-<div class="d-flex flex-row">
-   
+<div class="d-flex flex-row">   
+      @*@{Html.RenderPartial("_ProductData", Model);}*@
       @foreach (var product in Model)  
         { 
             <div class="p-2">
@@ -28,13 +28,33 @@
                     </tr>
                     <tr>
                         <td>
-                            <a href="/Home/Details?productId=@product.ProductId"> Go to View </a> |
-                            <a asp-controller="cart" asp-action="buy" asp-route-id="@product.ProductId">Add to Cart</a>    
+                            <a  href="/Home/Details?productId=@product.ProductId">
+                            <button type="button" class="btn btn-success"> Go to View </button></a> 
+                            @*<a  asp-controller="cart" asp-action="buy" asp-route-id="@product.ProductId">*@
+                            <button class="btn btn-success" value="Add to Cart" onclick="AddToCart('@product.ProductId')"  >Add to cart</button>
+                            @*</a> *@
+                            
                         </td>
                     </tr>
                 </table> 
             </div>
         } 
-      
-   
 </div>
+<script>
+function AddToCart(id) {
+    if (id != undefined && id != null) {
+        $.ajax({
+            url:'@Url.Action("Buy","Cart")',
+            type: 'Get',
+            data: {Pid :id},
+            success: function (data) {
+                $("#value").text(data);
+                //alert('Product added to cart!');
+            },
+            error: function () {
+                alert('An error occurred while adding the product to cart.');
+            }
+        });
+    }
+}
+</script>
