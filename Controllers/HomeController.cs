@@ -5,6 +5,7 @@ using ECommerceWeb.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace ECommerceWeb.Controllers
 {
@@ -13,11 +14,13 @@ namespace ECommerceWeb.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly UserDbContext dbContext;
         private readonly IProductService _productService;
-        public HomeController(ILogger<HomeController> logger, UserDbContext context, IProductService productService)
+        private readonly ICartService _cartService;
+        public HomeController(ILogger<HomeController> logger, UserDbContext context, IProductService productService, ICartService cartService)
         {
             _logger = logger;
              dbContext = context;
             _productService = productService;
+            _cartService = cartService;
         }
 
        public int NoOfCartProduct()
@@ -33,16 +36,43 @@ namespace ECommerceWeb.Controllers
        
         public async Task<IActionResult> Index()
         {
-            try { 
-            var product = await _productService.GetProducts();
-                ViewBag.Productcategory = await _productService.GetProductCategory();
-            return View(product);
-            }
-            catch(Exception ex)
+
+            //for session data add to database
+            if (User.Identity.IsAuthenticated)
             {
-                _logger.LogError(string.Format("Excellent description goes here about the exception. Happened for client"), ex);
-                return View(Privacy);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var cartBeforeLogin = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
+                var oldRecord = _cartService.GetCartByUserId(userId);
+                if (oldRecord != null)
+                {
+                    List<CartItem> cart = new List<CartItem>();
+                    foreach (var item in oldRecord)
+                    {
+                        cart.Add(new CartItem { Products = item.Products, Quantity = item.Quantity });
+                    }
+                    foreach(var item in cartBeforeLogin) 
+                    {
+                        cart.Add(new CartItem { Products = item.Products, Quantity = item.Quantity });
+                    }
+                    SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
+                }
+                if (cartBeforeLogin != null)
+                {
+                    foreach (var item in cartBeforeLogin)
+                    {
+                        var data = _productService.GetProductById(item.Products.ProductId);
+                        Cart model = new Cart();
+                        model.ProductId = item.Products.ProductId;
+                        model.Quantity = item.Quantity;
+                        model.TotalPrice = model.Quantity * data.Price;
+                        model.UserId = userId;
+                        _cartService.SaveCartProduct(model);
+                    }
+                }
             }
+
+            var product = await _productService.GetProducts();
+            return View(product);
         }
        
         [HttpGet]

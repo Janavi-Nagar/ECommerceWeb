@@ -60,14 +60,14 @@ namespace ECommerceWeb.Service
         
         public async Task<bool> DeleteCartProduct(Cart model)
         {
-            var data = dbContext.Cart.FirstOrDefault(m => m.ProductId == model.ProductId);
-            var data2 = dbContext.Cart.FirstOrDefault(m => m.UserId == model.UserId);
-            if(data == data2)
-            {
-                var cart = await dbContext.Cart.FindAsync(data.CartId);
-                dbContext.Cart.Remove(cart);
-                dbContext.SaveChanges();
-            }
+            var data = dbContext.Cart
+                        .Where(m => m.ProductId == model.ProductId)
+                        .Where(p => p.UserId == model.UserId)
+                        .FirstOrDefault();
+            
+            dbContext.Cart.Remove(data);
+            dbContext.SaveChanges();
+            
             return true;
         }
 

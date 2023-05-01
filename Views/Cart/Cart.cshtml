@@ -19,8 +19,8 @@
         </tr>
         @foreach (var item in ViewBag.cart)
         {
-            <tr>
-                <td><a asp-controller="cart" asp-action="remove" asp-route-id="@item.Products.ProductId">Remove</a></td>
+            <tr><td><a asp-controller="cart" asp-action="remove" asp-route-id="@item.Products.ProductId">
+                        <button type="button" class="btn btn-success">Remove</button></a></td>
                 <td>@item.Products.ProductId</td>
                 <td>@item.Products.ProductName</td>
                 <td><img src="~/images/@item.Products.ProductPicture" width="60" /> </td>
@@ -37,7 +37,7 @@
         </tr>
     </table>
     <br>
-    <a asp-controller="Home" asp-action="index">Continue Shopping</a>
+    <a asp-controller="Home" asp-action="index"><button type="button" class="btn btn-success">Continue Shopping</button></a>
 
 </body>
 </html>

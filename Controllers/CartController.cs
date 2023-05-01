@@ -21,12 +21,7 @@ namespace ECommerceWeb.Controllers
             _cartService = cartService;
             userManager = UserManager;
         }
-        public async Task<IActionResult> CartProducts()
-        {
-            var data = _cartService.GetCartProducts();
-            return PartialView("_CartData", data);
-        }
-
+       
         [Route("cart")]
         public IActionResult Cart()
         {
@@ -125,7 +120,7 @@ namespace ECommerceWeb.Controllers
                 model.ProductId = ProductId;
                 var ret = _cartService.DeleteCartProduct(model);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Cart", "Cart");
         }
 
         private int isExist(string proid)
