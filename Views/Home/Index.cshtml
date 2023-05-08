@@ -1,60 +1,65 @@
-﻿@model IEnumerable<ECommerceWeb.Models.Products>  
+﻿@model ECommerceWeb.Models.ProductParameters; 
   
 @{
     ViewData["Title"] = "Home Page";
 }  
   
-<div class="d-flex flex-row">   
-      @*@{Html.RenderPartial("_ProductData", Model);}*@
-      @foreach (var product in Model)  
-        { 
-            <div class="p-2">
-                <table>
-                    <tr>
-                     <td>  
-                            <img src="~/images/@product.ProductPicture"   
+<div class="container">
+  <div class="row">
+          @foreach (var product in Model.products)  
+            { 
+                <div class="col-sm-4 mt-3">
+                    <table>
+                        <tr>
+                         <td>  
+                                <img src="~/images/@product.ProductPicture"   
                             
-                                 height="300" width="300"   
-                                 asp-append-version="true" /> 
-                     </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @product.ProductName  
-                        </td> 
-                    </tr>
-                    <tr>
-                        <td>&#8377; @product.Price</td> 
-                    </tr>
-                    <tr>
-                        <td>
-                            <a  href="/Home/Details?productId=@product.ProductId">
-                            <button type="button" class="btn btn-success"> Go to View </button></a> 
-                            @*<a  asp-controller="cart" asp-action="buy" asp-route-id="@product.ProductId">*@
-                            <button class="btn btn-success" value="Add to Cart" onclick="AddToCart('@product.ProductId')"  >Add to cart</button>
-                            @*</a> *@
+                                     height="250" width="250"   
+                                     asp-append-version="true" /> 
+                         </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @product.ProductName  
+                            </td> 
+                        </tr>
+                        <tr>
+                            <td>&#8377; @product.Price</td> 
+                        </tr>
+                        <tr>
+                            <td>
+                                <a  href="/Home/Details?productId=@product.ProductId">
+                                <button type="button" class="btn btn-success"> Go to View </button></a> 
+                                @*<a  asp-controller="cart" asp-action="buy" asp-route-id="@product.ProductId">*@
+                                <button class="btn btn-success" value="Add to Cart" onclick="AddToCart('@product.ProductId')"  >Add to cart</button>
+                                @*</a> *@
                             
+                            </td>
+                        </tr>
+                    </table> 
+                </div>
+            }
+    </div>
+    <div>
+        <table cellpadding="2" cellspacing="2">
+                <tr>
+                    @for (int i = 1; i <= Model.PageCount; i++)
+                    {
+                        <td>
+                            @if (i != Model.PageNumber)
+                            {
+                                <a href="/Home/Index?currentPageIndex=@i">@i</a>
+                            }
+                            else
+                            {
+                                <span>@i</span>
+                            }
                         </td>
-                    </tr>
-                </table> 
-            </div>
-        } 
+                    }
+                </tr>
+            </table>
+    </div>
 </div>
 <script>
-function AddToCart(id) {
-    if (id != undefined && id != null) {
-        $.ajax({
-            url:'@Url.Action("Buy","Cart")',
-            type: 'Get',
-            data: {Pid :id},
-            success: function (data) {
-                $("#value").text(data);
-                //alert('Product added to cart!');
-            },
-            error: function () {
-                alert('An error occurred while adding the product to cart.');
-            }
-        });
-    }
-}
+
 </script>

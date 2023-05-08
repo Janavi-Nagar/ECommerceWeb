@@ -47,6 +47,6 @@
     </dl>
 </div>
 <div>
-    <a href="@Url.Action("Buy","Cart", new {Pid = @Model.ProductId })">Add to Cart</a>
+     <button class="btn btn-success" value="Add to Cart" onclick="AddToCart('@Model.ProductId')"  >Add to cart</button>
    
 </div>

@@ -1,10 +1,11 @@
 ﻿using ECommerceWeb.Interface;
-using ECommerceWeb.Models;
 using ECommerceWeb.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerceWeb.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;

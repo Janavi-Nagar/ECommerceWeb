@@ -1,0 +1,60 @@
+﻿@model ECommerceWeb.Models.ProductParameters;
+ 
+ 
+<!DOCTYPE html>
+ 
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div>
+        @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+        {
+           
+            <table cellpadding="0" cellspacing="0">
+                <tr>
+                    <th>CustomerID</th>
+                    <th>ContactName</th>
+                    <th>City</th>
+                    <th>Country</th>
+                </tr>
+                @foreach (var product in Model.products)
+                {
+                    <tr>
+                        <td>@product.ProductName</td>
+                        <td>@product.Price</td>
+                        <td>@product.ProductPicture</td>
+                    </tr>
+                }
+            </table>
+            <br />
+            <table cellpadding="0" cellspacing="0">
+                <tr>
+                    @for (int i = 1; i <= Model.PageCount; i++)
+                    {
+                        <td>
+                            @if (i != Model.PageNumber)
+                            {
+                                <a href="/paging/pagingIndex?currentPageIndex=@i">@i</a>
+                            }
+                            else
+                            {
+                                <span>@i</span>
+                            }
+                        </td>
+                    }
+                </tr>
+            </table>
+            <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
+        }
+        <script type="text/javascript">
+            function PagerClick(index) {
+                document.getElementById("hfCurrentPageIndex").value = index;
+                document.forms[0].submit();
+            }
+        </script>
+    </div>
+</body>
+</html>

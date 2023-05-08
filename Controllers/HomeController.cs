@@ -13,17 +13,28 @@ namespace ECommerceWeb.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly UserDbContext dbContext;
-        private readonly IProductService _productService;
+        private readonly IHomeService _homeService;
         private readonly ICartService _cartService;
-        public HomeController(ILogger<HomeController> logger, UserDbContext context, IProductService productService, ICartService cartService)
+        public HomeController(ILogger<HomeController> logger, UserDbContext context, IHomeService homeService, ICartService cartService)
         {
             _logger = logger;
              dbContext = context;
-            _productService = productService;
+            _homeService = homeService;
             _cartService = cartService;
         }
 
-       public int NoOfCartProduct()
+
+        [HttpGet]
+        public async Task<IActionResult> ProductSearch(string Name)
+        {
+            var search = _homeService.ProductSearch(Name);
+            if (search != null)
+            {
+                return View("Index", search);
+            }
+            return RedirectToAction("Index");
+        }
+        public int NoOfCartProduct()
         {
             var cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
             int no = 0;
@@ -34,7 +45,7 @@ namespace ECommerceWeb.Controllers
             return no;
         }
        
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int currentPageIndex)
         {
 
             //for session data add to database
@@ -49,10 +60,11 @@ namespace ECommerceWeb.Controllers
                     foreach (var item in oldRecord)
                     {
                         cart.Add(new CartItem { Products = item.Products, Quantity = item.Quantity });
-                    }
-                    foreach(var item in cartBeforeLogin) 
-                    {
-                        cart.Add(new CartItem { Products = item.Products, Quantity = item.Quantity });
+                    }if (cartBeforeLogin != null) { 
+                        foreach (var item in cartBeforeLogin) 
+                        {
+                            cart.Add(new CartItem { Products = item.Products, Quantity = item.Quantity });
+                        }
                     }
                     SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
                 }
@@ -60,7 +72,7 @@ namespace ECommerceWeb.Controllers
                 {
                     foreach (var item in cartBeforeLogin)
                     {
-                        var data = _productService.GetProductById(item.Products.ProductId);
+                        var data = _homeService.GetProductById(item.Products.ProductId);
                         Cart model = new Cart();
                         model.ProductId = item.Products.ProductId;
                         model.Quantity = item.Quantity;
@@ -71,25 +83,21 @@ namespace ECommerceWeb.Controllers
                 }
             }
 
-            var product = await _productService.GetProducts();
+            var product = await _homeService.IndexProducts(currentPageIndex);
             return View(product);
         }
        
         [HttpGet]
         public async Task<IActionResult> Details(string productId)
         {
-            ViewBag.Productcategory = await _productService.GetProductCategory();
-            return View("Details", await _productService.GetProductInfo(productId));
+           // ViewBag.Productcategory = await _productService.GetProductCategory();
+            return View("Details" /*await _productService.GetProductInfo(productId)*/);
         }
 
         public IActionResult Privacy()
         {
             return View();
         }
-       
-       
-
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

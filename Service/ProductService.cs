@@ -22,12 +22,12 @@ namespace ECommerceWeb.Service
         {
             return await dbContext.Products.ToListAsync();
         }
-
         public Products GetProductById(Guid ProductId)
         {
             var product = dbContext.Products.FirstOrDefault(m => m.ProductId == ProductId);
-            return product ;
+            return product;
         }
+
         public async Task<ProductViewModel> GetProductInfo(string Id)
         {
             var productid = new Guid(Id);
@@ -41,25 +41,10 @@ namespace ECommerceWeb.Service
                 productViewModel.InStock = product.InStock;
                 productViewModel.ProductImage = product.ProductPicture;
                 productViewModel.ProductCategoryId = product.ProductCategoryId;
-               // IFormFile productimage = OpenImage(productViewModel);
                 return productViewModel;
             }
             return productViewModel;
         }
-
-        //public IFormFile OpenImage(ProductViewModel model)
-        //{
-        //    var filename = Path.GetFileName(model.ProductPicture.FileName);
-        //    var filepath = Path.Combine(webHostEnvironment.WebRootPath, "images", filename);
-            
-        //    //model.ProductPicture = 
-        //    using (var fileStream = new FileStream(filepath, FileMode.Open))
-        //    {
-        //        model.ProductPicture.OpenReadStream();
-        //    }
-        //    return null;
-        //}
-
         private string UploadedFile(ProductViewModel model)
         {
             string uniqueFileName = null;

@@ -12,10 +12,26 @@ var connectionString = builder.Configuration.GetConnectionString("UserDbContextC
 builder.Services.AddDbContext<UserDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<UserDbContext>();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<UserDbContext>()
+    .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>(TokenOptions.DefaultProvider); ;
+builder.Services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>,
+            ApplicationUserClaimsPrincipalFactory
+            >();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("rolecreation", policy =>
+    policy.RequireRole("Admin")
+    );
+});
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.AccessDeniedPath = "/MyHttpStatuses/AccessDenied";
+});
+builder.Services.AddMvc();
 builder.Services.AddSession();
 builder.Services.AddTransient<IEmailSender, SendEmail>();
+builder.Services.AddTransient<IHomeService, HomeService>();
 builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddTransient<IProductService, ProductService>();

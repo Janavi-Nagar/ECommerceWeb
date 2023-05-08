@@ -10,7 +10,6 @@
     <table class="table table-bordered" cellpadding="2" cellspacing="2">
         <tr>
             <th>option</th>
-            <th>ProductId</th>
             <th>ProductName</th>
             <th>ProductPicture</th>
             <th>Price</th>
@@ -20,8 +19,7 @@
         @foreach (var item in ViewBag.cart)
         {
             <tr><td><a asp-controller="cart" asp-action="remove" asp-route-id="@item.Products.ProductId">
-                        <button type="button" class="btn btn-success">Remove</button></a></td>
-                <td>@item.Products.ProductId</td>
+                            <button class="btn btn-success" onclick="return confirm('Are you sure you want to delete?')">Remove</button></a></td>
                 <td>@item.Products.ProductName</td>
                 <td><img src="~/images/@item.Products.ProductPicture" width="60" /> </td>
                 <td>@item.Products.Price</td>
@@ -30,7 +28,7 @@
             </tr>
         }
         <tr>
-            <td align="right" colspan="6">Sum</td>
+            <td align="right" colspan="5">Sum</td>
             <td>
                 @ViewBag.total
             </td>
