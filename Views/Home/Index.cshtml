@@ -1,65 +1,19 @@
-﻿@model ECommerceWeb.Models.ProductParameters; 
-  
-@{
+﻿@{
     ViewData["Title"] = "Home Page";
-}  
-  
-<div class="container">
-  <div class="row">
-          @foreach (var product in Model.products)  
-            { 
-                <div class="col-sm-4 mt-3">
-                    <table>
-                        <tr>
-                         <td>  
-                                <img src="~/images/@product.ProductPicture"   
-                            
-                                     height="250" width="250"   
-                                     asp-append-version="true" /> 
-                         </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                @product.ProductName  
-                            </td> 
-                        </tr>
-                        <tr>
-                            <td>&#8377; @product.Price</td> 
-                        </tr>
-                        <tr>
-                            <td>
-                                <a  href="/Home/Details?productId=@product.ProductId">
-                                <button type="button" class="btn btn-success"> Go to View </button></a> 
-                                @*<a  asp-controller="cart" asp-action="buy" asp-route-id="@product.ProductId">*@
-                                <button class="btn btn-success" value="Add to Cart" onclick="AddToCart('@product.ProductId')"  >Add to cart</button>
-                                @*</a> *@
-                            
-                            </td>
-                        </tr>
-                    </table> 
-                </div>
-            }
-    </div>
-    <div>
-        <table cellpadding="2" cellspacing="2">
-                <tr>
-                    @for (int i = 1; i <= Model.PageCount; i++)
-                    {
-                        <td>
-                            @if (i != Model.PageNumber)
-                            {
-                                <a href="/Home/Index?currentPageIndex=@i">@i</a>
-                            }
-                            else
-                            {
-                                <span>@i</span>
-                            }
-                        </td>
-                    }
-                </tr>
-            </table>
-    </div>
-</div>
-<script>
+}
 
+<div id="productgrid"></div>
+<script>
+    $(document).ready(function () {
+        PagerClick(1)
+    });
+
+    function PagerClick(index) {
+        $.ajax({
+            url: "@Url.Action("GetProduct","Home")?currentPageIndex=" + index + "&searchtext=" + $("#Searchtext").val(),
+            success: function (result) {
+                $("#productgrid").html(result);
+            }
+        });
+    }
 </script>

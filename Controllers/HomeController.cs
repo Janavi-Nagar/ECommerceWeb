@@ -2,6 +2,7 @@
 using ECommerceWeb.Helpers;
 using ECommerceWeb.Interface;
 using ECommerceWeb.Models;
+using ECommerceWeb.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -22,18 +23,7 @@ namespace ECommerceWeb.Controllers
             _homeService = homeService;
             _cartService = cartService;
         }
-
-
-        [HttpGet]
-        public async Task<IActionResult> ProductSearch(string Name)
-        {
-            var search = _homeService.ProductSearch(Name);
-            if (search != null)
-            {
-                return View("Index", search);
-            }
-            return RedirectToAction("Index");
-        }
+      
         public int NoOfCartProduct()
         {
             var cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
@@ -44,8 +34,19 @@ namespace ECommerceWeb.Controllers
              }
             return no;
         }
-       
-        public async Task<IActionResult> Index(int currentPageIndex)
+
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        public ActionResult GetProduct(int currentPageIndex = 1,string searchtext = "")
+        {
+            return PartialView("_Product", this.GetProducts(currentPageIndex, searchtext));
+        }
+
+
+        private ProductModel GetProducts(int currentPageIndex,string searchtext)
         {
 
             //for session data add to database
@@ -82,9 +83,12 @@ namespace ECommerceWeb.Controllers
                     }
                 }
             }
-
-            var product = await _homeService.IndexProducts(currentPageIndex);
-            return View(product);
+            ProductSearchViewModel searchmodel = new ProductSearchViewModel();
+            searchmodel.searchtext = searchtext;
+            searchmodel.pagesize = 5;
+            searchmodel.pagenumber = currentPageIndex == 0 ? 1 : currentPageIndex;
+            var product = _homeService.ProductSearch(searchmodel);
+            return product;
         }
        
         [HttpGet]

@@ -1,7 +1,11 @@
 ﻿using ECommerceWeb.Data;
 using ECommerceWeb.Interface;
 using ECommerceWeb.Models;
+using ECommerceWeb.Models.ViewModels;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ECommerceWeb.Service
 {
@@ -17,42 +21,52 @@ namespace ECommerceWeb.Service
             var product = _dbContext.Products.FirstOrDefault(m => m.ProductId == ProductId);
             return product;
         }
-        public async Task<ProductParameters> IndexProducts(int currentPage)
+        
+        public ProductModel ProductSearch(ProductSearchViewModel searchmodel) 
         {
-            if(currentPage == 0)
+            ProductModel productParameters = new ProductModel();
+            var builder = WebApplication.CreateBuilder();
+            string conStr = builder.Configuration.GetConnectionString("UserDbContextConnection");
+            DataTable result = new DataTable();
+
+            SqlConnection con = new SqlConnection(conStr);
+            SqlCommand cmd = new SqlCommand("ProductSearch", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("ProductName", string.IsNullOrEmpty(searchmodel.searchtext) ? "" : searchmodel.searchtext); // Check how to add parameter with value
+            cmd.Parameters.AddWithValue("PageSize", searchmodel.pagesize);
+            cmd.Parameters.AddWithValue("PageNumber", searchmodel.pagenumber);
+
+            SqlParameter parm = new SqlParameter("@totalrecords", SqlDbType.Int);
+            parm.Direction = ParameterDirection.Output; // Check diff in output and return value from sql SP
+            cmd.Parameters.Add(parm);
+            
+            con.Open();
+            cmd.ExecuteNonQuery();
+
+            var adapt = new SqlDataAdapter(); // Check what is SqlDataAdapter
+            adapt.SelectCommand = cmd;
+            var dataset = new DataSet(); // Check diff Dataset and datatable
+            adapt.Fill(dataset);
+
+            int cnt = (int)cmd.Parameters["@totalrecords"].Value;
+            double pageCount = (double)((decimal)cnt / Convert.ToDecimal(searchmodel.pagesize));
+            productParameters.pagecount = (int)Math.Ceiling(pageCount);
+            productParameters.PageNumber = searchmodel.pagenumber;
+
+            List<Products> products = new List<Products>();
+            for (int i = 0; i < dataset.Tables[0].Rows.Count; i++)
             {
-                currentPage = 1;
+                Products products1 = new Products();
+                products1.ProductId = new Guid(dataset.Tables[0].Rows[i]["ProductId"].ToString());
+                products1.ProductName = dataset.Tables[0].Rows[i]["ProductName"].ToString();
+                products1.Price = Convert.ToInt16(dataset.Tables[0].Rows[i]["Price"].ToString());
+                products1.InStock = Convert.ToBoolean(dataset.Tables[0].Rows[i]["InStock"].ToString());
+                products1.ProductPicture = dataset.Tables[0].Rows[i]["ProductPicture"].ToString();
+                products1.ProductCategoryId = new Guid(dataset.Tables[0].Rows[i]["ProductCategoryId"].ToString());
+                products.Add(products1);
             }
-            ProductParameters productParameter = new ProductParameters();
-
-            productParameter.products = (from Products in _dbContext.Products
-                                         select Products)
-                            .OrderBy(products => products.ProductName)
-                            .Skip((currentPage - 1) * productParameter.PageSize)
-                            .Take(productParameter.PageSize).ToList();
-
-            double pageCount = (double)((decimal)_dbContext.Products.Count() / Convert.ToDecimal(productParameter.PageSize));
-            productParameter.PageCount = (int)Math.Ceiling(pageCount);
-
-            productParameter.PageNumber = currentPage;
-
-            return productParameter;
-        }
-        public ProductParameters ProductSearch(string search)
-        {
-            var data = _dbContext.Products
-                                .FromSqlRaw($"ProductSearch {search}")
-                                .ToList();
-            var currentPage = 1;
-            ProductParameters parameters = new ProductParameters();
-            parameters.products = (data).OrderBy(products => products.ProductName)
-                                .Skip((currentPage - 1) * parameters.PageSize)
-                                .Take(parameters.PageSize).ToList();
-            double pageCount = (double)(data.Count() / Convert.ToDecimal(parameters.PageSize));
-            parameters.PageCount = (int)Math.Ceiling(pageCount);
-
-            parameters.PageNumber = currentPage;
-            return parameters;
+            productParameters.products = products;
+            return productParameters;
         }
     }
 }
