@@ -22,4 +22,5 @@ public class UserDbContext : IdentityDbContext<IdentityUser>
     public DbSet<Products> Products { get; set; }
     public DbSet<ProductCategory> ProductCategory { get; set; }
     public DbSet<Cart> Cart { get; set; }
+    public DbSet<DiscountCoupon> DiscountCoupon { get; set; }
 }

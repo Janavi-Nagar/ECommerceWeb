@@ -1,7 +1,9 @@
 ﻿using ECommerceWeb.Data;
 using ECommerceWeb.Interface;
 using ECommerceWeb.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace ECommerceWeb.Service
 {
@@ -38,8 +40,31 @@ namespace ECommerceWeb.Service
 
             return productParameter;
         }
-        public ProductParameters ProductSearch(string search)
+        public ProductParameters ProductSearch(string search/*,int pagesize,int pagenumber*/) 
         {
+            //ProductParameters productParameters = new ProductParameters();
+            //var builder = WebApplication.CreateBuilder();
+            //string conStr = builder.Configuration.GetConnectionString("UserDbContextConnection");
+            //DataTable result = new DataTable();
+            //using (var sqlConnection = new SqlConnection(conStr))
+            //{
+            //    using (var command = sqlConnection.CreateCommand())
+            //    {
+            //        using (SqlDataAdapter sda = new SqlDataAdapter(command))
+            //        {
+            //            command.CommandType = System.Data.CommandType.StoredProcedure;
+            //            command.CommandText = "DeleteOwnersData";
+            //            command.Parameters.AddWithValue("@ProductName", search);
+            //            command.Parameters.AddWithValue("@PageSize", pagesize);
+            //            command.Parameters.AddWithValue("@PageNumber", pagenumber);
+            //            result = new DataTable();
+            //            sda.Fill(result);
+
+            //        }
+            //    }
+            //}
+
+
             var data = _dbContext.Products
                                 .FromSqlRaw($"ProductSearch {search}")
                                 .ToList();

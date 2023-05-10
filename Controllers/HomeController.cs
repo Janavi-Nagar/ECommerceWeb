@@ -2,7 +2,6 @@
 using ECommerceWeb.Helpers;
 using ECommerceWeb.Interface;
 using ECommerceWeb.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -22,15 +21,21 @@ namespace ECommerceWeb.Controllers
             _homeService = homeService;
             _cartService = cartService;
         }
-
+        public ActionResult Index()
+        {
+            return View();
+        } 
 
         [HttpGet]
-        public async Task<IActionResult> ProductSearch(string Name)
+        public async Task<IActionResult> GetProducts(int currentPageIndex, string Search)
         {
-            var search = _homeService.ProductSearch(Name);
-            if (search != null)
+            if (!string.IsNullOrEmpty(Search))
             {
-                return View("Index", search);
+                var search = _homeService.ProductSearch(Search);
+                if (search != null)
+                {
+                    return View("Index", search);
+                }
             }
             return RedirectToAction("Index");
         }

@@ -34,6 +34,7 @@ builder.Services.AddTransient<IEmailSender, SendEmail>();
 builder.Services.AddTransient<IHomeService, HomeService>();
 builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddTransient<IProductService, ProductService>();
 
 // Add services to the container.

@@ -1,0 +1,104 @@
+﻿<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+			<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body> 
+    <h3>Cart Page</h3>
+    
+    <table class="table table-bordered" cellpadding="2" cellspacing="2">
+        <tr>
+            <th>option</th>
+            <th>Coupon Code</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Valli till</th>
+            <th>Discount Price</th>
+        </tr>
+       @* @foreach (var item in ViewBag.Coupon)
+        {
+            <tr><td><a asp-controller="DiscountCoupon" asp-action="remove" asp-route-id="">
+                            <button class="btn btn-success" onclick="return confirm('Are you sure you want to delete?')">Remove</button></a></td>
+                <td>@item.CouponCode</td>
+            </tr>
+        }*@
+    </table>
+    <br>
+    <a asp-controller="DiscountCoupon" asp-action="DiscountCoupon"> </a>
+       
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal" data-whatever="">Add Coupon</button>
+   
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Coupon</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="CouponCode" class="col-form-label">Coupon Code</label>
+            <input type="text" class="form-control" id="recipient-name">
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="form-check-label">Status</label>
+            <input class="col-form-label form-check-input" type="checkbox" value="" id="flexCheckDefault">
+          </div>
+           <div class="form-group"  id='datetimepicker1'>
+            <label for="Date" class="col-form-label">Date</label>
+            <input type="text" class="form-control" id='dtpickerdemo' >
+            <span class="input-group-addon">
+               <span class="fa fa-calendar"></span>@*glyphicon glyphicon-calendar*@
+            </span>
+          </div>
+          <div class="form-group"  id='datetimepicker1'>
+            <label for="Date" class="col-form-label">Valid for</label>
+            <input type="text" class="form-control" id='dtpickerdemo' >
+            <span class="input-group-addon">
+               <span class="glyphicon glyphicon-calendar">
+                   </span>
+            </span>
+          </div>
+          <div class="form-group">
+            <label for="CouponCode" class="col-form-label">Discount Price</label>
+            <input type="number" class="form-control" id="recipient-name">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-sucess">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+
+$('#exampleModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget) // Button that triggered the modal
+  var recipient = button.data('whatever') // Extract info from data-* attributes
+  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+  var modal = $(this)
+  modal.find('.modal-title').text('New message to ' + recipient)
+  modal.find('.modal-body input').val(recipient)
+})
+</script>
+ <script type="text/javascript">
+            $(function () {
+                $('#dtpickerdemo').datetimepicker();
+            });
+</script>
+</html>

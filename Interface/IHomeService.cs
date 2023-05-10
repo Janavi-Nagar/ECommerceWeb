@@ -1,10 +1,11 @@
 ﻿using ECommerceWeb.Models;
+using ECommerceWeb.Models.ViewModels;
 
 namespace ECommerceWeb.Interface
 {
     public interface IHomeService
     {
-        ProductParameters ProductSearch(string search);
+        ProductParameters ProductSearch(ProductSearchViewModel searchmodel);
 
         Products GetProductById(Guid ProductId);
 
