@@ -58,8 +58,8 @@ namespace ECommerceWeb.Migrations
 
                     b.Property<string>("CouponCode")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");

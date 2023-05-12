@@ -7,6 +7,6 @@ namespace ECommerceWeb.Interface
         List<DiscountCoupon> GetCoupon();
         DiscountCoupon GetCouponById(string CouponId);
         int AddUpdateCoupon(DiscountCoupon model);
-        Task<bool> DeleteCoupon(Guid CouponId);
+        Task<bool> DeleteCoupon(string CouponId);
     }
 }

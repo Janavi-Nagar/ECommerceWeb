@@ -3,17 +3,4 @@
 }
 
 <div id="productgrid"></div>
-<script>
-    $(document).ready(function () {
-        PagerClick(1)
-    });
-
-    function PagerClick(index) {
-        $.ajax({
-            url: "@Url.Action("GetProduct","Home")?currentPageIndex=" + index + "&searchtext=" + $("#Searchtext").val(),
-            success: function (result) {
-                $("#productgrid").html(result);
-            }
-        });
-    }
-</script>
+<script  src="@Url.Content("~/js/Home/Index.js")" type="text/javascript"></script>

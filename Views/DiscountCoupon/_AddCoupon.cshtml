@@ -1,0 +1,39 @@
+﻿@model ECommerceWeb.Models.DiscountCoupon
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+<form id="saveForm" method="post">
+    @Html.HiddenFor(x => x.CouponId)
+    <div class="form-group">
+        <label asp-for="CouponCode" class="col-form-label"></label>
+        <input asp-for="CouponCode" class="form-control" />
+        <span asp-validation-for="CouponCode" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Status" class="form-check-label"></label>
+        <input asp-for="Status" class="form-check-input ml-2 p-2" type="checkbox" value="" id="flexCheckDefault">
+    </div>
+    <div class="form-group" id='datetimepicker1'>
+        <label asp-for="Date" class="form-check-label"></label>
+        <input asp-for="Date" type="text" class="form-control" id='dtpickerdemo'>
+    </div>
+    <div class="form-group" id='datetimepicker1'>
+        <label asp-for="Valid_Till" class="form-check-label"></label>
+        <input asp-for="Valid_Till" type="text" class="form-control" id='dtpickerdemo'>
+    </div>
+    <div class="form-group">
+        <label asp-for="Discount" class="col-form-label"></label>
+        <input asp-for="Discount" class="form-control" />
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button id="btnSave" type="submit" class="btn btn-success">Save</button>
+    </div>
+</form>
+
+
+<script>
+       $(function () {
+                $('#dtpickerdemo').datetimepicker();
+            });
+
+</script>

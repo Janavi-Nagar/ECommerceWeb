@@ -1,28 +1,7 @@
 ﻿@model ECommerceWeb.Models.ProductModel;
 
 <style>
-    .pagination {
-        display: inline-block;
-    }
-
-        .pagination a {
-            color: black;
-            float: left;
-            padding: 8px 16px;
-            text-decoration: none;
-            transition: background-color .3s;
-            border: 1px solid #ddd;
-        }
-
-            .pagination a.active {
-                background-color: #4CAF50;
-                color: white;
-                border: 1px solid #4CAF50;
-            }
-
-            .pagination a:hover:not(.active) {
-                background-color: #ddd;
-            }
+   
 </style>
 <div class="container">
     <div class="row">
@@ -48,7 +27,7 @@
                     <tr>
                         <td>
                             <a href="/Home/Details?productId=@product.ProductId">
-                                <button type="button" class="btn btn-success"> Go to View </button>
+                                <button type="button" class="btn btn-success"> Go to View</button>
                             </a>
                             <button class="btn btn-success" value="Add to Cart" onclick="AddToCart('@product.ProductId')">Add to cart</button>
                         </td>
@@ -72,3 +51,4 @@
 
     </div>
 </div>
+<script  src="@Url.Content("~/js/Home/product.js")" type="text/javascript"></script>

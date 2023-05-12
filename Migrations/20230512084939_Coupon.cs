@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ECommerceWeb.Migrations
 {
-    public partial class coupon : Migration
+    public partial class Coupon : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,7 +14,7 @@ namespace ECommerceWeb.Migrations
                 columns: table => new
                 {
                     CouponId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CouponCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    CouponCode = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Valid_Till = table.Column<DateTime>(type: "datetime2", nullable: false),

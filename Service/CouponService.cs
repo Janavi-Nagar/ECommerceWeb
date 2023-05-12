@@ -18,7 +18,20 @@ namespace ECommerceWeb.Service
 
         public DiscountCoupon GetCouponById(string CouponId)
         {
-            throw new NotImplementedException();
+            var id = new Guid(CouponId);
+            DiscountCoupon coupon = new DiscountCoupon();
+            var data = dbContext.DiscountCoupon.FirstOrDefault(m => m.CouponId == id);
+            if (data != null)
+            {
+                coupon.CouponId = data.CouponId;
+                coupon.CouponCode = data.CouponCode;
+                coupon.Date = data.Date;
+                coupon.Status = data.Status;
+                coupon.Valid_Till = data.Valid_Till;
+                coupon.Discount = data.Discount;
+                return coupon;
+            }
+            return coupon;
         }
         public int AddUpdateCoupon(DiscountCoupon model)
         {
@@ -42,6 +55,7 @@ namespace ECommerceWeb.Service
                 var data = dbContext.DiscountCoupon.FirstOrDefault(m => m.CouponId == model.CouponId);
                 if (data != null)
                 {
+                    data.CouponId = model.CouponId;
                     data.CouponCode = model.CouponCode;
                     data.Status = model.Status;
                     data.Date = model.Date;
@@ -55,9 +69,10 @@ namespace ECommerceWeb.Service
             return retresult;
         }
 
-        public async Task<bool> DeleteCoupon(Guid CouponId)
+        public async Task<bool> DeleteCoupon(string CouponId)
         {
-            var coupon = await dbContext.DiscountCoupon.FindAsync(CouponId);
+            var id = new Guid(CouponId);
+            var coupon = await dbContext.DiscountCoupon.FindAsync(id);
             dbContext.DiscountCoupon.Remove(coupon);
             dbContext.SaveChanges();
             return await Task.FromResult(true);
