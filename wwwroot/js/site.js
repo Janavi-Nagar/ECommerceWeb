@@ -5,3 +5,12 @@
 //for cart count
 
 
+//for search button
+function SearchProduct() {
+    $.ajax({
+        url: "/Home/GetProducts?currentPageIndex=1&Search=" + $('#Searchtext').val(),
+        success: function (result) {
+            $("#productgrid").html(result);
+        }
+    });
+}

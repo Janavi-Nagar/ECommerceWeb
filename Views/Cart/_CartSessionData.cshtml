@@ -1,0 +1,36 @@
+﻿<div class="d-flex flex-row"> 
+    <table class="table table-bordered" cellpadding="2" cellspacing="2">
+        <tr>
+            <th>option</th>
+            <th>ProductId</th>
+            <th>ProductName</th>
+            <th>ProductPicture</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Sub Total</th>
+        </tr>
+        @foreach (var item in ViewBag.cart)
+        {
+            <tr>
+                <td><a asp-controller="cart" asp-action="remove" asp-route-id="@item.Products.ProductId">
+                        <button type="button" class="btn btn-success">Remove</button>
+                    </a></td>
+                <td>@item.Products.ProductId</td>
+                <td>@item.Products.ProductName</td>
+                <td><img src="~/images/@item.Products.ProductPicture" width="60" /> </td>
+                <td>@item.Products.Price</td>
+                <td>@item.Quantity</td>
+                <td>@(item.Products.Price * item.Quantity)</td>
+            </tr>
+        }
+        <tr>
+            <td align="right" colspan="6">Sum</td>
+            <td>
+                @ViewBag.total
+            </td>
+        </tr>
+    </table>
+</div>
+<div>
+    <a asp-controller="Home" asp-action="index"><button type="button" class="btn btn-success">Continue Shopping</button></a>
+</div>
