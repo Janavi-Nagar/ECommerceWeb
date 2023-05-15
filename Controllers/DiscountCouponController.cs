@@ -18,6 +18,12 @@ namespace ECommerceWeb.Controllers
         {
             return View(couponService.GetCoupon());
         }
+        [HttpGet]
+        public List<DiscountCoupon> Coupon()
+        {
+            return couponService.GetCoupon();
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> GetCouponInfo(string Id)
@@ -31,13 +37,14 @@ namespace ECommerceWeb.Controllers
             if (ModelState.IsValid)
             {
                 var result = couponService.AddUpdateCoupon(coupon);
-                if (result == 1 | result == 2)
-                {
-                    return RedirectToAction("DiscountCoupon");
-                }
-                return RedirectToAction("DiscountCoupon");
+                return Json(result); // return type 
+                //if (result == 1 | result == 2)
+                //{
+                //    return RedirectToAction("DiscountCoupon");
+                //}
+                //return RedirectToAction("DiscountCoupon");
             }
-            return RedirectToAction("DiscountCoupon");
+            return RedirectToAction("GetCouponInfo", coupon);
         }
 
         public async Task<IActionResult> DeleteCoupon(string Id)

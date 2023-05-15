@@ -36,36 +36,58 @@ namespace ECommerceWeb.Service
         public int AddUpdateCoupon(DiscountCoupon model)
         {
             var retresult = 0;
-            if (model.CouponId == new Guid())
+            var discountcoupon = dbContext.DiscountCoupon.Where(x => x.CouponId != model.CouponId).ToList();
+            var coupondata  = discountcoupon.Where(x => x.CouponCode.ToLower().Equals(model.CouponCode.ToLower())).ToList(); // here is checking with coupan code
+
+            if(coupondata.Any())
             {
-                DiscountCoupon coupon = new DiscountCoupon
-                {
-                    CouponCode = model.CouponCode,
-                    Status = model.Status,
-                    Date = model.Date,
-                    Valid_Till = model.Valid_Till,
-                    Discount = model.Discount
-                };
-                dbContext.DiscountCoupon.Add(coupon);
-                dbContext.SaveChanges();
-                retresult = 1;
+                retresult = 3; // 3 for coupon code exists
             }
             else
             {
-                var data = dbContext.DiscountCoupon.FirstOrDefault(m => m.CouponId == model.CouponId);
-                if (data != null)
+                var coupondatedata = discountcoupon.Where(x => x.CouponCode.ToLower().Equals(model.CouponCode.ToLower())
+                && x.Date.Equals(model.Date) && x.Valid_Till.Equals(model.Valid_Till)).ToList(); // here is checking with coupan code
+
+                if (coupondatedata.Any())
                 {
-                    data.CouponId = model.CouponId;
-                    data.CouponCode = model.CouponCode;
-                    data.Status = model.Status;
-                    data.Date = model.Date;
-                    data.Valid_Till = model.Valid_Till;
-                    data.Discount = model.Discount;
-                    dbContext.DiscountCoupon.Update(data);
-                    dbContext.SaveChanges();
-                    retresult = 2;
+                    retresult = 4; // 4 for coupon code exists with time duration
                 }
+                else
+                {
+                    if (model.CouponId == new Guid())
+                    {
+                        DiscountCoupon coupon = new DiscountCoupon
+                        {
+                            CouponCode = model.CouponCode,
+                            Status = model.Status,
+                            Date = model.Date,
+                            Valid_Till = model.Valid_Till,
+                            Discount = model.Discount
+                        };
+                        dbContext.DiscountCoupon.Add(coupon);
+                        dbContext.SaveChanges();
+                        retresult = 1; // 1 for Insert
+                    }
+                    else
+                    {
+                        var data = dbContext.DiscountCoupon.FirstOrDefault(m => m.CouponId == model.CouponId);
+                        if (data != null)
+                        {
+                            data.CouponId = model.CouponId;
+                            data.CouponCode = model.CouponCode;
+                            data.Status = model.Status;
+                            data.Date = model.Date;
+                            data.Valid_Till = model.Valid_Till;
+                            data.Discount = model.Discount;
+                            dbContext.DiscountCoupon.Update(data);
+                            dbContext.SaveChanges();
+                            retresult = 2; // 2 for update
+                        }
+                    }
+                }
+              
             }
+            
             return retresult;
         }
 

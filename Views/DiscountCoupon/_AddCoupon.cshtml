@@ -5,7 +5,7 @@
     @Html.HiddenFor(x => x.CouponId)
     <div class="form-group">
         <label asp-for="CouponCode" class="col-form-label"></label>
-        <input asp-for="CouponCode" class="form-control" />
+        <input asp-for="CouponCode" class="form-control" Id="CouponCode" />
         <span asp-validation-for="CouponCode" class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -14,11 +14,11 @@
     </div>
     <div class="form-group" id='datetimepicker1'>
         <label asp-for="Date" class="form-check-label"></label>
-        <input asp-for="Date" type="text" class="form-control" id='dtpickerdemo'>
+        <input asp-for="Date" type="text" class="form-control" Id="date">
     </div>
     <div class="form-group" id='datetimepicker1'>
         <label asp-for="Valid_Till" class="form-check-label"></label>
-        <input asp-for="Valid_Till" type="text" class="form-control" id='dtpickerdemo'>
+        <input asp-for="Valid_Till" type="text" class="form-control" id="validTill">
     </div>
     <div class="form-group">
         <label asp-for="Discount" class="col-form-label"></label>
@@ -26,14 +26,48 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button id="btnSave" type="submit" class="btn btn-success">Save</button>
+        <button id="btnSave" type="button" class="btn btn-success">Save</button>
     </div>
 </form>
 
 
 <script>
-       $(function () {
-                $('#dtpickerdemo').datetimepicker();
-            });
+    $(function () {
+             $('#dtpickerdemo').datetimepicker();
+         });
+
+
+     $("#btnSave").click(function (e) {
+         var val = $("#CouponCode").val();
+         var valno = val.length;
+         var date = $("#date").val();
+         var validTill =  $("#validTill").val();
+         var error = null;
+
+         if(valno > 3 && valno < 5){
+             $.ajax({
+             url: "/DiscountCoupon/DiscountCoupon",
+             type: "POST",
+             data: $("#saveForm").serialize(),
+             success : function (data) {
+                 if(data == 1 || data == 2) // insert or update that time reload page
+                 {
+                     window.location.reload();
+                 }else if(data == 3){ // for data exists
+                     alert("Coupon code exists");
+                 }
+                 else(data == 4) // for data exists with duration
+                     alert("Coupon code exists with duration");
+                 }
+             });
+         }else{
+             alert("Please enter valid coupon code min 3 and max 5.");
+         }
+     });
+
+
+
 
 </script>
+
+
