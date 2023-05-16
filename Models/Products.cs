@@ -22,6 +22,7 @@ namespace ECommerceWeb.Models
         [Display(Name = "Product Category")]
         public Guid ProductCategoryId { get; set; }
         public ProductCategory ProductCategory { get; set; }
+        public Guid UserId { get; set; }
        
     }
 }

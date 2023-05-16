@@ -15,3 +15,12 @@
         <a class="nav-link text-white" asp-area="" asp-controller="Role" asp-action="RoleList">Roles</a>
     </li>
 }
+@if (SignInManager.IsSignedIn(User) && User.IsInRole("Seller"))
+{
+    <li class="nav-item">
+        <a class="nav-link text-white" asp-area="" asp-controller="Product" asp-action="Product">Product</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-white" asp-area="" asp-controller="ProductCategory" asp-action="ProductCategoryList">ProductCategory</a>
+    </li>
+}

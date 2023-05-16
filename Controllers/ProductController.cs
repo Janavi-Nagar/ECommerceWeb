@@ -1,11 +1,12 @@
 ﻿using ECommerceWeb.Interface;
+using ECommerceWeb.Models;
 using ECommerceWeb.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ECommerceWeb.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
@@ -14,13 +15,49 @@ namespace ECommerceWeb.Controllers
         {
             _productService = productService;
         }
-       
+        [Authorize(Roles = "Admin, Seller")]
         public async Task<IActionResult> Product()
         {
-            var product = await _productService.GetProducts();
-            return View(product);
+            if (User.IsInRole("Admin"))
+            {
+                var product = await _productService.GetProducts();
+                var data = await _productService.GetProductCategory();
+                var output = from prt in product
+                             join dt in data
+            
+                             on prt.ProductCategoryId equals dt.ProductCategoryId
+                             select new Products
+                             {
+                                 ProductName = prt.ProductName,
+                                 ProductPicture = prt.ProductPicture,
+                                 Price = prt.Price,
+                                 InStock = prt.InStock,
+                                 ProductCategory = dt
+                             };
+                return View(output);
+            }
+            else
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var product = await _productService.SellerProducts(userId);
+                var data = await _productService.GetProductCategory();
+                var output = from prt in product
+                             join dt in data
+                             on prt.ProductCategoryId equals dt.ProductCategoryId
+                             select new Products
+                             {
+                                 ProductName = prt.ProductName,
+                                 ProductPicture = prt.ProductPicture,
+                                 Price = prt.Price,
+                                 InStock = prt.InStock,
+                                 ProductCategory = dt
+                             };
+
+                return View(output);
+            }
         }
 
+        [Authorize(Roles = "Admin, Seller")]
         [HttpGet]
         public async Task<IActionResult> ProductForm()
         {
@@ -43,7 +80,9 @@ namespace ECommerceWeb.Controllers
                 {
                     var ret = await _productService.SaveProductData(model);
                     if (ret == 1 || ret == 2)
+                    {
                         return Redirect("Product");
+                    }
                     else
                         return View("ProductForm", model);
                 }

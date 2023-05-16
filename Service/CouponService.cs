@@ -1,6 +1,9 @@
 ﻿using ECommerceWeb.Data;
 using ECommerceWeb.Interface;
 using ECommerceWeb.Models;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace ECommerceWeb.Service
 {
@@ -66,7 +69,7 @@ namespace ECommerceWeb.Service
                         };
                         dbContext.DiscountCoupon.Add(coupon);
                         dbContext.SaveChanges();
-                        retresult = 1; // 1 for Insert
+                        retresult = 1; // 1 for insert
                     }
                     else
                     {

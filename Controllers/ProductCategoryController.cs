@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerceWeb.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, Seller")]
     public class ProductCategoryController : Controller
     {
         private readonly IProductCategoryService productCategoryService;

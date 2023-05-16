@@ -10,7 +10,7 @@
     </div>
     <div class="form-group">
         <label asp-for="Status" class="form-check-label"></label>
-        <input asp-for="Status" class="form-check-input ml-2 p-2" type="checkbox" value="" id="flexCheckDefault">
+        <input asp-for="Status" class="form-check-input ml-2 p-2" type="checkbox" id="flexCheckDefault">
     </div>
     <div class="form-group" id='datetimepicker1'>
         <label asp-for="Date" class="form-check-label"></label>
@@ -44,7 +44,7 @@
          var validTill =  $("#validTill").val();
          var error = null;
 
-         if(valno > 3 && valno < 5){
+         if(valno > 3 && valno < 6){
              $.ajax({
              url: "/DiscountCoupon/DiscountCoupon",
              type: "POST",

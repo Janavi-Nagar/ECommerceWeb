@@ -22,6 +22,15 @@ namespace ECommerceWeb.Service
         {
             return await dbContext.Products.ToListAsync();
         }
+
+        public async Task<List<Products>> SellerProducts(string userId)
+        {
+            var UserId = new Guid(userId);
+            var data = await dbContext.Products
+                        .Where(m => m.UserId == UserId)
+                        .ToListAsync();
+            return data;
+        }
         public Products GetProductById(Guid ProductId)
         {
             var product = dbContext.Products.FirstOrDefault(m => m.ProductId == ProductId);
@@ -98,7 +107,7 @@ namespace ECommerceWeb.Service
             }
             return Task.FromResult(retresult);
         }
-
+       
         private void Productimage(ProductViewModel model, Products product)
         {
             if (model.ProductPicture != null)
@@ -132,6 +141,5 @@ namespace ECommerceWeb.Service
         {
             return await dbContext.ProductCategory.ToListAsync();
         }
-
     }
 }

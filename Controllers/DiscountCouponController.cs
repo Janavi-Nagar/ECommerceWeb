@@ -38,11 +38,6 @@ namespace ECommerceWeb.Controllers
             {
                 var result = couponService.AddUpdateCoupon(coupon);
                 return Json(result); // return type 
-                //if (result == 1 | result == 2)
-                //{
-                //    return RedirectToAction("DiscountCoupon");
-                //}
-                //return RedirectToAction("DiscountCoupon");
             }
             return RedirectToAction("GetCouponInfo", coupon);
         }

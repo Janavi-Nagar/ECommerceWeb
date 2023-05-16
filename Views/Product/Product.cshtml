@@ -11,13 +11,11 @@
 </p>  
 <table class="table table-bordered">  
     <thead>  
-        <tr>  
-            <th>@Html.DisplayNameFor(model => model.ProductId)</th>
-            <th>@Html.DisplayNameFor(model => model.ProductPicture)</th>
-            <th>@Html.DisplayNameFor(model => model.ProductName)</th>  
+        <tr><th>Name</th>   
+            <th>Picture</th>
             <th>@Html.DisplayNameFor(model => model.Price)</th>  
             <th>@Html.DisplayNameFor(model => model.ProductCategory)</th>  
-            <th>@Html.DisplayNameFor(model => model.InStock)</th>  
+            <th>Stock</th>  
         </tr>  
     </thead>  
     <tbody>  
@@ -25,8 +23,8 @@
         {  
             <tr>
                 <td>
-                    @product.ProductId
-                </td>
+                    @product.ProductName  
+                </td>  
 
                 <td>  
                     <img src="~/images/@product.ProductPicture"   
@@ -34,13 +32,17 @@
                          height="40" width="40"   
                          asp-append-version="true" /> 
                 </td>
-                <td>
-                    @product.ProductName  
-                </td>  
+               
                 <td>@product.Price</td>  
-                <td>@product.ProductCategoryId</td> 
-                <td>@product.InStock</td>  
-                 <td>
+                <td>@product.ProductCategory.Name</td> 
+                <td>@if(product.InStock){
+                        <div>available</div>
+                    }
+                    else{
+                        <div>unavailable</div>
+                    }
+                    </td>  
+                <td>
                     <a href="@Url.Action("GetProductInfo","Product", new { productId = @product.ProductId })">Edit </a> /
                     <a href="/Product/DeleteProduct?productId=@product.ProductId">Delete</a>
                 </td>
