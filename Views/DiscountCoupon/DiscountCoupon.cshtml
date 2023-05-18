@@ -7,8 +7,6 @@
         <tr>
             <th>option</th>
             <th>Coupon Code</th>
-            <th>Status</th>
-            <th>Date</th>
             <th>Valli till</th>
             <th>Discount Price</th>
         </tr>
@@ -18,11 +16,9 @@
                 <td>
                     @*<a asp-controller="DiscountCoupon" asp-action="DeleteCoupon" asp-route-id="@item.CouponId">*@
                     <button class="btn btn-success" onclick="return validateData('@item.CouponId');">Remove</button>@*</a>*@ /
-                    <button class="btn btn-success" data-toggle="modal" data-target="#exampleModal" onclick="GetDetails('@item.CouponId')">Edit</button>
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="GetDetails('@item.CouponId')">Edit</button>
                 </td>
                 <td>@item.CouponCode</td>
-                <td>@item.Status</td>
-                <td>@item.Date</td>
                 <td>@item.Valid_Till</td>
                 <td>@item.Discount</td>
             </tr>
@@ -31,19 +27,17 @@
     <br>
     <a asp-controller="DiscountCoupon" asp-action="DiscountCoupon"> </a>
        
-    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal" data-whatever="" onclick="GetDetails(0)">Add Coupon</button>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal" data-whatever="" onclick="GetDetails(0)">Add Coupon</button>
    
 
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Coupon</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Add Coupon</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
                 <div class="modal-body" id="CouponBody">
       </div>
     </div>
@@ -52,16 +46,21 @@
 </body>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
+    const exampleModal = document.getElementById('exampleModal')
+if (exampleModal) {
+  exampleModal.addEventListener('show.bs.modal', event => {
+    // Button that triggered the modal
+    const button = event.relatedTarget
+    // Extract info from data-bs-* attributes\
+    // If necessary, you could initiate an Ajax request here
+    // and then do the updating in a callback.
 
-$('#exampleModal').on('show.bs.modal', function (event) {
-  var button = $(event.relatedTarget) // Button that triggered the modal
-  var recipient = button.data('whatever') // Extract info from data-* attributes
-  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-  var modal = $(this)
-  modal.find('.modal-title').text('New message to ' + recipient)
-  modal.find('.modal-body input').val(recipient)
-})
+    // Update the modal's content.
+    const modalTitle = exampleModal.querySelector('.modal-title')
+
+    modalTitle.textContent = `Add Coupon`
+  })
+}
 </script>
 <script src="@Url.Content("~/js/DiscountCoupon/DiscountCoupon.js")" type="text/javascript"></script>
 

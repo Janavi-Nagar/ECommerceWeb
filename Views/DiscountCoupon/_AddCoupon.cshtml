@@ -1,73 +1,84 @@
 ﻿@model ECommerceWeb.Models.DiscountCoupon
-<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
-<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
-<form id="saveForm" method="post">
+
+
+<form id="saveForm">
     @Html.HiddenFor(x => x.CouponId)
     <div class="form-group">
         <label asp-for="CouponCode" class="col-form-label"></label>
         <input asp-for="CouponCode" class="form-control" Id="CouponCode" />
         <span asp-validation-for="CouponCode" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="Status" class="form-check-label"></label>
-        <input asp-for="Status" class="form-check-input ml-2 p-2" type="checkbox" id="flexCheckDefault">
-    </div>
-    <div class="form-group" id='datetimepicker1'>
-        <label asp-for="Date" class="form-check-label"></label>
-        <input asp-for="Date" type="text" class="form-control" Id="date">
-    </div>
-    <div class="form-group" id='datetimepicker1'>
+    <div class="form-group" @*id='datetimepicker1'*@>
         <label asp-for="Valid_Till" class="form-check-label"></label>
-        <input asp-for="Valid_Till" type="text" class="form-control" id="validTill">
+        <input asp-for="Valid_Till" type="text" class="form-control" Id="validTill">
     </div>
     <div class="form-group">
         <label asp-for="Discount" class="col-form-label"></label>
-        <input asp-for="Discount" class="form-control" />
+        <input asp-for="Discount" class="form-control" id="Disount"/>
+    </div>
+    <div class="form-group">
+        <label class="col-form-label">Select Products for Apply</label>
+        <div class="col-md-6">
+            <select id="multiple-checkboxes" multiple="multiple">
+                @foreach (var item in ViewBag.data)
+                {
+                    <option value="@item.ProductId">@item.ProductName</option>
+                }
+            </select>
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button id="btnSave" type="button" class="btn btn-success">Save</button>
     </div>
+
 </form>
 
 
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
 <script>
-    $(function () {
-             $('#dtpickerdemo').datetimepicker();
-         });
 
 
-     $("#btnSave").click(function (e) {
-         var val = $("#CouponCode").val();
-         var valno = val.length;
-         var date = $("#date").val();
-         var validTill =  $("#validTill").val();
-         var error = null;
+        $("#btnSave").click(function (e) {
+            var valno = $("#CouponCode").val().length;
+            var selected = new Array();
+               for (var option of document.getElementById('multiple-checkboxes').options)
+               {
+                   if (option.selected) {
+                       selected.push(option.value);
+                   }
+               }
+               
+            if(valno > 3 && valno < 6){
+                $.ajax({
+                url: "/DiscountCoupon/DiscountCoupon",
+                type: "POST",
+                data: $("#saveForm").serialize(),
+                success : function (result) {
+                    debugger;
+                    if(result != null) // insert or update that time reload page
+                    {
+                        $.ajax({
+                           url: "/DiscountCoupon/CouponProduct",
+                           type: "POST",
+                           data:  {selected : selected , id : result},
+                           error: function () { alert('Error'); }
+                        });
+                        window.location.reload();
 
-         if(valno > 3 && valno < 6){
-             $.ajax({
-             url: "/DiscountCoupon/DiscountCoupon",
-             type: "POST",
-             data: $("#saveForm").serialize(),
-             success : function (data) {
-                 if(data == 1 || data == 2) // insert or update that time reload page
-                 {
-                     window.location.reload();
-                 }else if(data == 3){ // for data exists
-                     alert("Coupon code exists");
-                 }
-                 else(data == 4) // for data exists with duration
-                     alert("Coupon code exists with duration");
-                 }
-             });
-         }else{
-             alert("Please enter valid coupon code min 3 and max 5.");
-         }
-     });
+                    }else // for data exists with duration
+                        alert("result is null");
+                    
+                    }
 
-
-
+                });
+            }else{
+                alert("Please enter valid coupon code min 3 and max 5.");
+            }
+        });
 
 </script>
+
 
 
