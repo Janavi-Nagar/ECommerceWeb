@@ -1,5 +1,6 @@
 ﻿using ECommerceWeb.Interface;
 using ECommerceWeb.Models;
+using ECommerceWeb.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerceWeb.Controllers
@@ -7,10 +8,12 @@ namespace ECommerceWeb.Controllers
     public class DiscountCouponController : Controller
     {
         private readonly ICouponService couponService;
+        private readonly IProductService productService;
 
-        public DiscountCouponController(ICouponService _couponService)
+        public DiscountCouponController(ICouponService _couponService, IProductService _productService)
         {
             couponService = _couponService;
+            productService = _productService;
         }
         
         [HttpGet]
@@ -23,38 +26,28 @@ namespace ECommerceWeb.Controllers
         {
             return couponService.GetCoupon();
         }
-
-
         [HttpGet]
         public async Task<IActionResult> GetCouponInfo(string Id)
         {
-            var data = from prd in couponService.GetProductList()
+            var data = from prd in productService.Products()
                        select new
                        {
                            ProductId = prd.ProductId,
                            ProductName = prd.ProductName
                        };
             ViewBag.data = data;
-            return PartialView("_AddCoupon", Id != "0" ? couponService.GetCouponById(Id) : new DiscountCoupon());
+            return PartialView("_AddCoupon", Id != "0" ? couponService.GetCouponById(Id) : new CouponViewModel());
         }
 
         [HttpPost]
-        public IActionResult DiscountCoupon(DiscountCoupon coupon, string[] selected)
+        public IActionResult DiscountCoupon(CouponViewModel coupon)
         {
             if (ModelState.IsValid)
             {
-                var result = couponService.AddUpdateCoupon(coupon);
-                return Json(result); // return type 
+                couponService.AddUpdateCoupon(coupon);
             }
             return RedirectToAction("GetCouponInfo", coupon);
         }
-        [HttpPost]
-        public IActionResult CouponProduct(string[] selected, Guid id)
-        {
-            couponService.AddCouponProduct(selected, id);
-            return RedirectToAction("DiscountCoupon");
-        }
-
         public async Task<IActionResult> DeleteCoupon(string Id)
         {
             await couponService.DeleteCoupon(Id);

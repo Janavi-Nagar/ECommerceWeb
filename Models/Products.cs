@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace ECommerceWeb.Models
 {
@@ -23,6 +24,6 @@ namespace ECommerceWeb.Models
         public Guid ProductCategoryId { get; set; }
         public ProductCategory ProductCategory { get; set; }
         public Guid UserId { get; set; }
-       
+        public virtual IdentityUser User { get; set; }
     }
 }

@@ -6,11 +6,9 @@ namespace ECommerceWeb.Models
     public class OrderItem
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public int Quantity { get; set; }
-        public int Price { get; set; }
-
         public Guid ProductId { get; set; }
         [ForeignKey("ProductId")]
         public Products Products { get; set; }

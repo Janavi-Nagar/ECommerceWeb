@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using ECommerceWeb.Areas.Identity.Pages.Account;
 using ECommerceWeb.Interface;
 using ECommerceWeb.Service;
+using ECommerceWeb.Areas.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("UserDbContextConnection") ?? throw new InvalidOperationException("Connection string 'UserDbContextConnection' not found.");
@@ -12,12 +13,15 @@ var connectionString = builder.Configuration.GetConnectionString("UserDbContextC
 builder.Services.AddDbContext<UserDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<UserDbContext>()
-    .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>(TokenOptions.DefaultProvider); ;
-builder.Services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>,
-            ApplicationUserClaimsPrincipalFactory
-            >();
+    .AddDefaultTokenProviders();
+
+    //.AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>(TokenOptions.DefaultProvider);
+
+builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsPrincipalFactory>();
+
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("rolecreation", policy =>

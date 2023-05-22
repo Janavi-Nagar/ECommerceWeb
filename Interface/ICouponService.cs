@@ -1,4 +1,5 @@
 ﻿using ECommerceWeb.Models;
+using ECommerceWeb.Models.ViewModels;
 
 namespace ECommerceWeb.Interface
 {
@@ -6,9 +7,8 @@ namespace ECommerceWeb.Interface
     {
         List<DiscountCoupon> GetCoupon();
         List<Products> GetProductList();
-        DiscountCoupon GetCouponById(string CouponId);
-        Guid AddUpdateCoupon(DiscountCoupon model);
-        void AddCouponProduct(string[] selected, Guid id);
+        CouponViewModel GetCouponById(string CouponId);
+        void AddUpdateCoupon(CouponViewModel model);
         Task<bool> DeleteCoupon(string CouponId);
     }
 }

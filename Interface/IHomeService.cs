@@ -7,6 +7,5 @@ namespace ECommerceWeb.Interface
     {
         ProductModel ProductSearch(ProductSearchViewModel searchmodel);
 
-        Products GetProductById(Guid ProductId);
     }
 }

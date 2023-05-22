@@ -15,11 +15,12 @@ namespace ECommerceWeb.Models.ViewModels
         public int Price { get; set; }
         public bool InStock { get; set; }
 
-        //[Required(ErrorMessage = "Please choose profile image")]
         [Display(Name = "Profile Picture")]
         public IFormFile ProductPicture { get; set; }
         [NotMapped]
         public string? ProductImage { get; set; }
         public Guid ProductCategoryId { get; set; }
+        [NotMapped]
+        public string? ProductCategoryName { get; set; }
     }
 }

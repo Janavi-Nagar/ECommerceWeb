@@ -18,9 +18,26 @@ namespace ECommerceWeb.Service
             webHostEnvironment = hostEnvironment;
         }
 
-        public async Task<List<Products>> GetProducts()
+        public List<Products> Products()
         {
-            return await dbContext.Products.ToListAsync();
+            return dbContext.Products.ToList();
+        }
+        public async Task<IQueryable<ProductViewModel>> GetProducts()
+        {
+            var data = from prd in dbContext.Products
+                       join cat in dbContext.ProductCategory
+                       on prd.ProductCategoryId equals cat.ProductCategoryId
+                       select new ProductViewModel
+                       {
+                           ProductId = prd.ProductId,
+                           ProductName = prd.ProductName,
+                           Price = prd.Price,
+                           ProductImage = prd.ProductPicture,
+                           InStock = prd.InStock,
+                           ProductCategoryName = cat.Name,
+                           ProductCategoryId = prd.ProductCategoryId
+                       };
+            return data;
         }
 
         public async Task<List<Products>> SellerProducts(string userId)
@@ -42,6 +59,7 @@ namespace ECommerceWeb.Service
             var productid = new Guid(Id);
             ProductViewModel productViewModel = new ProductViewModel();
             var product = await dbContext.Products.FirstOrDefaultAsync(m => m.ProductId == productid);
+            var data = await dbContext.ProductCategory.FirstOrDefaultAsync(m => m.ProductCategoryId == product.ProductCategoryId);
             if (product != null)
             {
                 productViewModel.ProductId = product.ProductId;
@@ -50,6 +68,7 @@ namespace ECommerceWeb.Service
                 productViewModel.InStock = product.InStock;
                 productViewModel.ProductImage = product.ProductPicture;
                 productViewModel.ProductCategoryId = product.ProductCategoryId;
+                productViewModel.ProductCategoryName = data.Name;
                 return productViewModel;
             }
             return productViewModel;
@@ -135,11 +154,6 @@ namespace ECommerceWeb.Service
                 }
             }
             return await Task.FromResult(true);
-        }
-
-        public async Task<List<ProductCategory>> GetProductCategory()
-        {
-            return await dbContext.ProductCategory.ToListAsync();
         }
     }
 }

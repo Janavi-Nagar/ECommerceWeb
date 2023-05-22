@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerceWeb.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20230516075913_newproduct")]
-    partial class newproduct
+    [Migration("20230520060234_forienkeyUserId")]
+    partial class forienkeyUserId
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -52,6 +52,27 @@ namespace ECommerceWeb.Migrations
                     b.ToTable("Cart");
                 });
 
+            modelBuilder.Entity("ECommerceWeb.Models.CouponProduct", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CouponId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CouponId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CouponProduct");
+                });
+
             modelBuilder.Entity("ECommerceWeb.Models.DiscountCoupon", b =>
                 {
                     b.Property<Guid>("CouponId")
@@ -63,14 +84,8 @@ namespace ECommerceWeb.Migrations
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
                     b.Property<decimal>("Discount")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
 
                     b.Property<DateTime>("Valid_Till")
                         .HasColumnType("datetime2");
@@ -122,28 +137,16 @@ namespace ECommerceWeb.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("UserId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("ProductId");
 
                     b.HasIndex("ProductCategoryId");
 
+                    b.HasIndex("UserId1");
+
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("ECommerceWeb.Models.SellerProduct", b =>
-                {
-                    b.Property<Guid>("ProductId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ProductCategoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("ProductId");
-
-                    b.ToTable("SellerProduct");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -210,6 +213,10 @@ namespace ECommerceWeb.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -261,6 +268,8 @@ namespace ECommerceWeb.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -344,6 +353,21 @@ namespace ECommerceWeb.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ECommerceWeb.Areas.Identity.Data.ApplicationUser", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("ApplicationUser");
+                });
+
             modelBuilder.Entity("ECommerceWeb.Models.Cart", b =>
                 {
                     b.HasOne("ECommerceWeb.Models.Products", "Products")
@@ -363,6 +387,25 @@ namespace ECommerceWeb.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ECommerceWeb.Models.CouponProduct", b =>
+                {
+                    b.HasOne("ECommerceWeb.Models.DiscountCoupon", "DiscountCoupon")
+                        .WithMany()
+                        .HasForeignKey("CouponId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ECommerceWeb.Models.Products", "Products")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DiscountCoupon");
+
+                    b.Navigation("Products");
+                });
+
             modelBuilder.Entity("ECommerceWeb.Models.Products", b =>
                 {
                     b.HasOne("ECommerceWeb.Models.ProductCategory", "ProductCategory")
@@ -371,7 +414,13 @@ namespace ECommerceWeb.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1");
+
                     b.Navigation("ProductCategory");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using ECommerceWeb.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 
 namespace ECommerceWeb.Models
@@ -8,13 +9,14 @@ namespace ECommerceWeb.Models
     {
         [Key]
         public int OrderId { get; set; }
+        public Guid UserId { get; set; }
+        [ForeignKey(nameof(UserId))]
+        public ApplicationUser UserName { get; set; }
+        public Guid CartId { get; set; }
+        [ForeignKey(nameof(CartId))]
+        public List<Cart> Cart { get; set; }
+        public int TotalPrice { get; set; }
 
-        public string Email { get; set; }
-
-        public string Id { get; set; }
-        [ForeignKey(nameof(Id))]
-        public IdentityUser UserName { get; set; }
-
-        public List<OrderItem> OrderItems { get; set; }
+        //public List<OrderItem> OrderItems { get; set; }
     }
 }

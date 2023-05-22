@@ -1,6 +1,7 @@
 ﻿using ECommerceWeb.Data;
 using ECommerceWeb.Interface;
 using ECommerceWeb.Models;
+using ECommerceWeb.Models.ViewModels;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -23,24 +24,28 @@ namespace ECommerceWeb.Service
             return dbContext.Products.ToList();
         }
 
-        public DiscountCoupon GetCouponById(string CouponId)
+        public CouponViewModel GetCouponById(string CouponId)
         {
             var id = new Guid(CouponId);
-            DiscountCoupon coupon = new DiscountCoupon();
+            CouponViewModel coupon = new CouponViewModel();
             var data = dbContext.DiscountCoupon.FirstOrDefault(m => m.CouponId == id);
+            var data2 = dbContext.CouponProduct
+                            .Where(m => m.CouponId == id)
+                            .Select(u => u.ProductId)
+                            .ToList();
             if (data != null)
             {
                 coupon.CouponId = data.CouponId;
                 coupon.CouponCode = data.CouponCode;
                 coupon.Valid_Till = data.Valid_Till;
                 coupon.Discount = data.Discount;
+                coupon.ProductIds = data2;
                 return coupon;
             }
             return coupon;
         }
-        public Guid AddUpdateCoupon(DiscountCoupon model)
+        public void AddUpdateCoupon(CouponViewModel model)
         {
-            Guid retresult = Guid.Empty;
             if (model.CouponId == new Guid())
             {
                 DiscountCoupon coupon = new DiscountCoupon
@@ -51,39 +56,41 @@ namespace ECommerceWeb.Service
                 };
                 dbContext.DiscountCoupon.Add(coupon);
                 dbContext.SaveChanges();
-                var data = dbContext.DiscountCoupon.FirstOrDefault(m => m.CouponCode == model.CouponCode);
-                retresult = data.CouponId;
-                    
+                List<CouponProduct> data = new List<CouponProduct>();
+                foreach (var i in model.ProductIds)
+                {
+                    data.Add(new CouponProduct { ProductId = i, CouponId = model.CouponId });
+                }
+                dbContext.CouponProduct.AddRange(data);
+                dbContext.SaveChanges();
             }
             else
             {
                 var data = dbContext.DiscountCoupon.FirstOrDefault(m => m.CouponId == model.CouponId);
+                var data2 = dbContext.CouponProduct
+                                    .Where(m => m.CouponId == model.CouponId)
+                                    .ToList();
                 if (data != null)
                 {
+                    if (data2 != null)
+                    {
+                        dbContext.CouponProduct.RemoveRange(data2);
+                        dbContext.SaveChanges();
+                    }
                     data.CouponId = model.CouponId;
                     data.CouponCode = model.CouponCode;
                     data.Valid_Till = model.Valid_Till;
                     data.Discount = model.Discount;
                     dbContext.DiscountCoupon.Update(data);
                     dbContext.SaveChanges();
-                    retresult = data.CouponId;
+                    List<CouponProduct> cp = new List<CouponProduct>();
+                    foreach (var i in model.ProductIds)
+                    {
+                        cp.Add(new CouponProduct { CouponId = data.CouponId, ProductId = i });
+                    }
+                    dbContext.CouponProduct.AddRange(cp);
+                    dbContext.SaveChanges();
                 }
-            }
-            return retresult;
-        }
-
-        public void AddCouponProduct(string[] selected, Guid id)
-        {
-            foreach(var i in selected)
-            {
-                var Id = new Guid(i);
-                CouponProduct data = new CouponProduct
-                {
-                    ProductId = Id,
-                    CouponId = id
-                };
-                dbContext.CouponProduct.Add(data);
-                dbContext.SaveChanges();
             }
         }
         public async Task<bool> DeleteCoupon(string CouponId)

@@ -1,4 +1,5 @@
-﻿using ECommerceWeb.Data;
+﻿using ECommerceWeb.Areas.Identity.Data;
+using ECommerceWeb.Data;
 using ECommerceWeb.Helpers;
 using ECommerceWeb.Interface;
 using ECommerceWeb.Models;
@@ -13,9 +14,9 @@ namespace ECommerceWeb.Controllers
     {
         private readonly IProductService _productService;
         private readonly ICartService _cartService;
-        private readonly UserManager<IdentityUser> userManager;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public CartController(IProductService productService, ICartService cartService, UserManager<IdentityUser> UserManager)
+        public CartController(IProductService productService, ICartService cartService, UserManager<ApplicationUser> UserManager)
         {
             _productService = productService;
             _cartService = cartService;

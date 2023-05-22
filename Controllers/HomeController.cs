@@ -16,12 +16,14 @@ namespace ECommerceWeb.Controllers
         private readonly UserDbContext dbContext;
         private readonly IHomeService _homeService;
         private readonly ICartService _cartService;
-        public HomeController(ILogger<HomeController> logger, UserDbContext context, IHomeService homeService, ICartService cartService)
+        private readonly IProductService _productService;
+        public HomeController(ILogger<HomeController> logger, UserDbContext context, IHomeService homeService, ICartService cartService, IProductService productService)
         {
             _logger = logger;
              dbContext = context;
             _homeService = homeService;
             _cartService = cartService;
+            _productService = productService;
         }
       
         public int NoOfCartProduct()
@@ -73,7 +75,7 @@ namespace ECommerceWeb.Controllers
                 {
                     foreach (var item in cartBeforeLogin)
                     {
-                        var data = _homeService.GetProductById(item.Products.ProductId);
+                        var data = _productService.GetProductById(item.Products.ProductId);
                         Cart model = new Cart();
                         model.ProductId = item.Products.ProductId;
                         model.Quantity = item.Quantity;
@@ -94,8 +96,7 @@ namespace ECommerceWeb.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(string productId)
         {
-           // ViewBag.Productcategory = await _productService.GetProductCategory();
-            return View("Details" /*await _productService.GetProductInfo(productId)*/);
+            return View("Details", await _productService.GetProductInfo(productId));
         }
 
         public IActionResult Privacy()

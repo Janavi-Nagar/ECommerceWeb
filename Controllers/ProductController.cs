@@ -10,10 +10,12 @@ namespace ECommerceWeb.Controllers
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
+        private readonly IProductCategoryService _productCategoryService;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, IProductCategoryService productCategoryService)
         {
             _productService = productService;
+            _productCategoryService = productCategoryService;
         }
         [Authorize(Roles = "Admin, Seller")]
         public async Task<IActionResult> Product()
@@ -21,26 +23,13 @@ namespace ECommerceWeb.Controllers
             if (User.IsInRole("Admin"))
             {
                 var product = await _productService.GetProducts();
-                var data = await _productService.GetProductCategory();
-                var output = from prt in product
-                             join dt in data
-            
-                             on prt.ProductCategoryId equals dt.ProductCategoryId
-                             select new Products
-                             {
-                                 ProductName = prt.ProductName,
-                                 ProductPicture = prt.ProductPicture,
-                                 Price = prt.Price,
-                                 InStock = prt.InStock,
-                                 ProductCategory = dt
-                             };
-                return View(output);
+                return View(product);
             }
             else
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var product = await _productService.SellerProducts(userId);
-                var data = await _productService.GetProductCategory();
+                var data = _productCategoryService.GetProductCategory();
                 var output = from prt in product
                              join dt in data
                              on prt.ProductCategoryId equals dt.ProductCategoryId
@@ -61,14 +50,14 @@ namespace ECommerceWeb.Controllers
         [HttpGet]
         public async Task<IActionResult> ProductForm()
         {
-            ViewBag.Productcategory = await _productService.GetProductCategory();
+            ViewBag.Productcategory = _productCategoryService.GetProductCategory();
             return View(new ProductViewModel());
         }
 
         [HttpGet]
         public async Task<IActionResult> GetProductInfo(string productId)
         {
-            ViewBag.Productcategory = await _productService.GetProductCategory();
+            ViewBag.Productcategory =  _productCategoryService.GetProductCategory();
             return View("ProductForm", await _productService.GetProductInfo(productId));
         }
         [HttpPost]

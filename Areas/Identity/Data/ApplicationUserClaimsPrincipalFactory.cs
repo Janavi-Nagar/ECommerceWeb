@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using ECommerceWeb.Areas.Identity.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 
-public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<IdentityUser, IdentityRole>
+public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationUser, IdentityRole>
 {
     public ApplicationUserClaimsPrincipalFactory(
-        UserManager<IdentityUser> userManager,
+        UserManager<ApplicationUser> userManager,
         RoleManager<IdentityRole> roleManager,
         IOptions<IdentityOptions> options
         ) : base(userManager, roleManager, options)
@@ -13,7 +14,7 @@ public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<
 
     }
 
-    protected override async Task<ClaimsIdentity> GenerateClaimsAsync(IdentityUser user)
+    protected override async Task<ClaimsIdentity> GenerateClaimsAsync(ApplicationUser user)
     {
         var identity = await base.GenerateClaimsAsync(user);
 

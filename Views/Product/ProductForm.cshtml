@@ -55,15 +55,15 @@
                                 <label class="custom-file-label" for="customFile">Choose file</label>
                             </div>  
                             <span asp-validation-for="ProductPicture" class="text-danger"></span>
-                            <div style="position: relative;">
-                                @*<button type="button" class="close" style="position: absolute; top: 2px; right: 20px; z-index: 10;" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>*@
+                            @if(Model.ProductImage != null)
+                            {
+                                <div style="position: relative;">
                                 <img src="~/images/@Model.ProductImage"   
                                 class=""   
                                 height="70" width="70"   
                                 asp-append-version="true" />
-                            </div>
+                                </div>
+                            }
                         </div>  
                     </div>  
                 </div>  

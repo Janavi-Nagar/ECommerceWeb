@@ -22,16 +22,20 @@
         </dd>
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductCategoryId)
+            @Html.DisplayNameFor(model => model.ProductCategoryName)
         </dt>
          <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ProductCategoryId)
+            @Html.DisplayFor(model => model.ProductCategoryName)
         </dd>
          <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.InStock)
         </dt>
          <dd class="col-sm-10">
-            @Model.InStock
+             @if(Model.InStock == true){
+               <div>Available</div>
+            }else{
+                <div>Unavailable</div>
+            }
             
         </dd>
         

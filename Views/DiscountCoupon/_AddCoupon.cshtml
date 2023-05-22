@@ -1,4 +1,4 @@
-﻿@model ECommerceWeb.Models.DiscountCoupon
+﻿@model ECommerceWeb.Models.ViewModels.CouponViewModel
 
 
 <form id="saveForm">
@@ -17,9 +17,9 @@
         <input asp-for="Discount" class="form-control" id="Disount"/>
     </div>
     <div class="form-group">
-        <label class="col-form-label">Select Products for Apply</label>
+        <label asp-for="ProductIds" class="col-form-label"></label>
         <div class="col-md-6">
-            <select id="multiple-checkboxes" multiple="multiple">
+            <select asp-for="ProductIds" id="multiple-checkboxes" multiple="multiple">
                 @foreach (var item in ViewBag.data)
                 {
                     <option value="@item.ProductId">@item.ProductName</option>
@@ -42,36 +42,12 @@
 
         $("#btnSave").click(function (e) {
             var valno = $("#CouponCode").val().length;
-            var selected = new Array();
-               for (var option of document.getElementById('multiple-checkboxes').options)
-               {
-                   if (option.selected) {
-                       selected.push(option.value);
-                   }
-               }
-               
             if(valno > 3 && valno < 6){
                 $.ajax({
                 url: "/DiscountCoupon/DiscountCoupon",
                 type: "POST",
                 data: $("#saveForm").serialize(),
-                success : function (result) {
-                    debugger;
-                    if(result != null) // insert or update that time reload page
-                    {
-                        $.ajax({
-                           url: "/DiscountCoupon/CouponProduct",
-                           type: "POST",
-                           data:  {selected : selected , id : result},
-                           error: function () { alert('Error'); }
-                        });
-                        window.location.reload();
-
-                    }else // for data exists with duration
-                        alert("result is null");
-                    
-                    }
-
+                success : function () { window.location.reload(); }
                 });
             }else{
                 alert("Please enter valid coupon code min 3 and max 5.");

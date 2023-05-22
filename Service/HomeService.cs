@@ -16,12 +16,6 @@ namespace ECommerceWeb.Service
         {
             _dbContext = context;
         }
-        public Products GetProductById(Guid ProductId)
-        {
-            var product = _dbContext.Products.FirstOrDefault(m => m.ProductId == ProductId);
-            return product;
-        }
-        
         public ProductModel ProductSearch(ProductSearchViewModel searchmodel) 
         {
             ProductModel productParameters = new ProductModel();

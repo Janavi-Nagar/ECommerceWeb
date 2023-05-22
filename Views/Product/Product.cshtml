@@ -1,10 +1,10 @@
-﻿@model IEnumerable<ECommerceWeb.Models.Products>  
+﻿@model IQueryable<ECommerceWeb.Models.ViewModels.ProductViewModel>  
   
 @{  
     ViewData["Title"] = "Home Page";  
 }  
   
-<h4 class="text-center text-uppercase">List of Products</h4>  
+<h4 class="text-center text-uppercase">Products</h4>  
   
 <p>  
     <a asp-action="ProductForm" class="btn btn-sm btn-primary rounded-0 text-uppercase"><i class="fas fa-plus-circle"></i> Add New</a>  
@@ -13,8 +13,8 @@
     <thead>  
         <tr><th>Name</th>   
             <th>Picture</th>
-            <th>@Html.DisplayNameFor(model => model.Price)</th>  
-            <th>@Html.DisplayNameFor(model => model.ProductCategory)</th>  
+            <th>Price</th>  
+            <th>Category Name</th>  
             <th>Stock</th>  
         </tr>  
     </thead>  
@@ -27,19 +27,19 @@
                 </td>  
 
                 <td>  
-                    <img src="~/images/@product.ProductPicture"   
+                    <img src="~/images/@product.ProductImage"   
                          class="rounded-circle"   
                          height="40" width="40"   
                          asp-append-version="true" /> 
                 </td>
                
                 <td>@product.Price</td>  
-                <td>@product.ProductCategory.Name</td> 
+                <td>@product.ProductCategoryName</td> 
                 <td>@if(product.InStock){
-                        <div>available</div>
+                        <div>Available</div>
                     }
                     else{
-                        <div>unavailable</div>
+                        <div>Unavailable</div>
                     }
                     </td>  
                 <td>
