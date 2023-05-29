@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using ECommerceWeb.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ECommerceWeb.Areas.Identity.Data;
 
@@ -7,5 +8,7 @@ public class ApplicationUser : IdentityUser
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
+
+    public ICollection<Products> Product { get; set; }
 }
 

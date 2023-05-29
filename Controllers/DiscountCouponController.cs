@@ -22,7 +22,7 @@ namespace ECommerceWeb.Controllers
             return View(couponService.GetCoupon());
         }
         [HttpGet]
-        public List<DiscountCoupon> Coupon()
+        public IEnumerable<DiscountCoupon> Coupon()
         {
             return couponService.GetCoupon();
         }

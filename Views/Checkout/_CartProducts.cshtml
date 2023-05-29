@@ -1,0 +1,70 @@
+﻿@using System.Globalization;
+@model ECommerceWeb.Models.ViewModels.CheckoutViewModel
+
+@{
+    var sum = 0;
+
+    foreach (var item in @Model.Cart)
+    {
+        sum = sum + item.Products.Price * item.Quantity;
+    }
+
+}
+<h5 class="d-flex justify-content-between align-items-center mb-3">
+    <span class="text-primary">Your cart</span>
+    <span class="badge bg-primary rounded-pill">@Model.NoOfCartItems</span>
+</h5>
+
+<ul class="list-group mb-3">
+    @foreach (var item in @Model.Cart)
+    {
+        <li class="list-group-item d-flex justify-content-between lh-sm ecartitems">
+            <div>
+                <h6 class="my-0">@item.Products.ProductName</h6>
+                <label hidden id="Cart_ProductId">@item.Products.ProductId</label>
+                <label hidden id="Cart_UintPrice">@item.Products.Price</label>
+                <label hidden id="Cart_Quantity">@item.Quantity</label>
+                <label hidden id="Cart_Discount">0</label>
+                <label id="discountper_@item.Products.ProductId" class="discountpercls text-success">Discount 0.00%</label>
+            </div>
+            <div>
+                <h6 class="text-muted">@((item.Products.Price * item.Quantity).ToString("N", CultureInfo.InvariantCulture))</h6>
+                <label id="amount_@item.Products.ProductId" class="amountpercls text-success" style="float: right;">0.00</label>
+            </div>
+        </li>
+    }
+
+
+
+    <li class="list-group-item d-flex justify-content-between">
+        <span>Total</span>
+        <strong id="productamt">
+            @(sum.ToString("N", CultureInfo.InvariantCulture))
+        </strong>
+    </li>
+    <li class="list-group-item d-flex justify-content-between bg-light">
+        <div class="text-success">
+            <h6 class="my-0">Promo code (<small class="Promocode">XXXX</small>)</h6>
+
+        </div>
+        <span class="text-success discountamt">
+            -0.00
+        </span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between bg-light">
+        <div class="text-success">
+            <h6 class="my-0">Paid Amount (Rs)</h6>
+
+        </div>
+        <span class="text-success finalamt">
+            @(sum.ToString("N", CultureInfo.InvariantCulture))
+        </span>
+    </li>
+</ul>
+
+<script>
+    $(document).ready(function () {
+        $("#grossamount").val($("#productamt").text().replace(/,/g, ""));
+        $("#Net").val($("#productamt").text().replace(/,/g, ""));
+    });
+</script>

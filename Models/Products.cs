@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using ECommerceWeb.Areas.Identity.Data;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace ECommerceWeb.Models
@@ -23,7 +24,7 @@ namespace ECommerceWeb.Models
         [Display(Name = "Product Category")]
         public Guid ProductCategoryId { get; set; }
         public ProductCategory ProductCategory { get; set; }
-        public Guid UserId { get; set; }
-        public virtual IdentityUser User { get; set; }
+        public string UserId { get; set; }
+        //public virtual ApplicationUser User { get; set; }
     }
 }

@@ -22,6 +22,11 @@ public class UserDbContext : IdentityDbContext//<ApplicationUser>
 
         //builder.Entity<ApplicationUser>();
 
+        builder.Entity<ApplicationUser>()
+            .HasMany(u => u.Product)
+            .WithOne()
+            .HasForeignKey(h => h.UserId)
+            .OnDelete(DeleteBehavior.ClientNoAction);
     }
     public DbSet<Products> Products { get; set; }
     public DbSet<ProductCategory> ProductCategory { get; set; }
@@ -29,4 +34,7 @@ public class UserDbContext : IdentityDbContext//<ApplicationUser>
     public DbSet<DiscountCoupon> DiscountCoupon { get; set; }
     public DbSet<CouponProduct> CouponProduct { get; set; }
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+    public DbSet<Order> Order { get; set; }
+    public DbSet<OrderDetails> OrderDetails { get; set; }
+    public DbSet<CustomerBilling> CustomerBilling { get; set; }
 }

@@ -13,27 +13,37 @@ namespace ECommerceWeb.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly UserDbContext dbContext;
         private readonly IHomeService _homeService;
         private readonly ICartService _cartService;
         private readonly IProductService _productService;
-        public HomeController(ILogger<HomeController> logger, UserDbContext context, IHomeService homeService, ICartService cartService, IProductService productService)
+        public HomeController(ILogger<HomeController> logger, IHomeService homeService, ICartService cartService, IProductService productService)
         {
             _logger = logger;
-             dbContext = context;
             _homeService = homeService;
             _cartService = cartService;
             _productService = productService;
         }
-      
+
         public int NoOfCartProduct()
         {
-            var cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
             int no = 0;
-            if (cart != null)
+            if (User.Identity.IsAuthenticated)
             {
-                no = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart").Count();
-             }
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var cart = _cartService.GetCartByUserId(userId);
+                if (cart != null)
+                {
+                    no = cart.Count();
+                }
+            }
+            else
+            {
+                var cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
+                if (cart != null)
+                {
+                    no = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart").Count();
+                }
+            }
             return no;
         }
 
@@ -42,13 +52,13 @@ namespace ECommerceWeb.Controllers
             return View();
         }
 
-        public ActionResult GetProduct(int currentPageIndex = 1,string searchtext = "")
+        public ActionResult GetProduct(int currentPageIndex = 1, string searchtext = "")
         {
             return PartialView("_Product", this.GetProducts(currentPageIndex, searchtext));
         }
 
 
-        private ProductModel GetProducts(int currentPageIndex,string searchtext)
+        private ProductModel GetProducts(int currentPageIndex, string searchtext)
         {
 
             //for session data add to database
@@ -63,10 +73,14 @@ namespace ECommerceWeb.Controllers
                     foreach (var item in oldRecord)
                     {
                         cart.Add(new CartItem { Products = item.Products, Quantity = item.Quantity });
-                    }if (cartBeforeLogin != null) { 
-                        foreach (var item in cartBeforeLogin) 
+                    }
+                    if (cartBeforeLogin != null)
+                    {
+                        foreach (var item in cartBeforeLogin)
                         {
-                            cart.Add(new CartItem { Products = item.Products, Quantity = item.Quantity });
+                            var cntcartdata = cart.Select(x => x.Products.ProductId).Where(x => x.Equals(item.Products.ProductId)).Count();
+                            if (cntcartdata == 0)
+                                cart.Add(new CartItem { Products = item.Products, Quantity = item.Quantity });
                         }
                     }
                     SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
@@ -92,7 +106,7 @@ namespace ECommerceWeb.Controllers
             var product = _homeService.ProductSearch(searchmodel);
             return product;
         }
-       
+
         [HttpGet]
         public async Task<IActionResult> Details(string productId)
         {

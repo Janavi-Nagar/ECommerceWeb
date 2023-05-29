@@ -29,20 +29,7 @@ namespace ECommerceWeb.Controllers
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var product = await _productService.SellerProducts(userId);
-                var data = _productCategoryService.GetProductCategory();
-                var output = from prt in product
-                             join dt in data
-                             on prt.ProductCategoryId equals dt.ProductCategoryId
-                             select new Products
-                             {
-                                 ProductName = prt.ProductName,
-                                 ProductPicture = prt.ProductPicture,
-                                 Price = prt.Price,
-                                 InStock = prt.InStock,
-                                 ProductCategory = dt
-                             };
-
-                return View(output);
+                return View(product);
             }
         }
 
@@ -67,13 +54,17 @@ namespace ECommerceWeb.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var ret = await _productService.SaveProductData(model);
-                    if (ret == 1 || ret == 2)
+                    if (User.Identity.IsAuthenticated)
                     {
-                        return Redirect("Product");
+                        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                        var ret = await _productService.SaveProductData(model, userId);
+                        if (ret == 1 || ret == 2)
+                        {
+                            return Redirect("Product");
+                        }
+                        else
+                            return View("ProductForm", model);
                     }
-                    else
-                        return View("ProductForm", model);
                 }
                 else
                 {

@@ -7,9 +7,9 @@ namespace ECommerceWeb.Interface
     {
         List<Products> Products();
         Task<IQueryable<ProductViewModel>> GetProducts();
-        Task<List<Products>> SellerProducts(string userId);
+        Task<IQueryable<ProductViewModel>> SellerProducts(string userId);
         Task<ProductViewModel> GetProductInfo(string productId);
-        Task<int> SaveProductData(ProductViewModel model);
+        Task<int> SaveProductData(ProductViewModel model, string userId);
         Task<bool> DeleteProduct(Guid productId);
         Products GetProductById(Guid ProductId);
     }

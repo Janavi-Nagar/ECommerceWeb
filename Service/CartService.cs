@@ -12,7 +12,11 @@ namespace ECommerceWeb.Service
         {
             dbContext = context;
         }
-
+        public Products GetProductById(Guid ProductId)
+        {
+            var product = dbContext.Products.FirstOrDefault(m => m.ProductId == ProductId);
+            return product;
+        }
         public async Task<List<Cart>> GetCartProducts()
         {
             return await dbContext.Cart.ToListAsync();
@@ -36,7 +40,7 @@ namespace ECommerceWeb.Service
         public int SaveCartProduct(Cart model)
         {
             var retresult = 0;
-            if (!(dbContext.Cart.Any(m => m.ProductId == model.ProductId)&& dbContext.Cart.Any(m => m.UserId == model.UserId)))
+            if (!dbContext.Cart.Any(m => m.ProductId == model.ProductId && m.UserId == model.UserId))
             {
                 dbContext.Cart.Add(model);
                 dbContext.SaveChanges();
@@ -44,12 +48,12 @@ namespace ECommerceWeb.Service
             }
             else
             {
-                var cart = dbContext.Cart.FirstOrDefault(m => m.ProductId == model.ProductId);
-                var data = dbContext.Products.Find(cart.ProductId);
+                var cart = dbContext.Cart.FirstOrDefault(m => m.ProductId == model.ProductId && m.UserId == model.UserId);
                 if (cart != null)
                 {
-                    cart.Quantity = cart.Quantity + 1;
-                    cart.TotalPrice = cart.TotalPrice + data.Price;
+                    var data = dbContext.Products.Find(cart.ProductId);
+                    cart.Quantity = model.Quantity;
+                    cart.TotalPrice = data.Price * model.Quantity;
                     dbContext.Cart.Update(cart);
                     dbContext.SaveChanges();
                     retresult = 2;

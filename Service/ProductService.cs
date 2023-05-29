@@ -40,12 +40,22 @@ namespace ECommerceWeb.Service
             return data;
         }
 
-        public async Task<List<Products>> SellerProducts(string userId)
+        public async Task<IQueryable<ProductViewModel>> SellerProducts(string userId)
         {
-            var UserId = new Guid(userId);
-            var data = await dbContext.Products
-                        .Where(m => m.UserId == UserId)
-                        .ToListAsync();
+            var data = from prd in dbContext.Products
+                       join cat in dbContext.ProductCategory
+                       on prd.ProductCategoryId equals cat.ProductCategoryId
+                       where prd.UserId == userId
+                       select new ProductViewModel
+                       {
+                           ProductId = prd.ProductId,
+                           ProductName = prd.ProductName,
+                           Price = prd.Price,
+                           ProductImage = prd.ProductPicture,
+                           InStock = prd.InStock,
+                           ProductCategoryName = cat.Name,
+                           ProductCategoryId = prd.ProductCategoryId
+                       };
             return data;
         }
         public Products GetProductById(Guid ProductId)
@@ -91,7 +101,7 @@ namespace ECommerceWeb.Service
         }
 
 
-        public Task<int> SaveProductData(ProductViewModel model)
+        public Task<int> SaveProductData(ProductViewModel model, string userId)
         {
             var retresult = 0;
             if (model.ProductId == new Guid())
@@ -102,10 +112,10 @@ namespace ECommerceWeb.Service
                     ProductName = model.ProductName,
                     Price = model.Price,
                     InStock = model.InStock,
-                    //ProductCategory = productCategory,
-                    ProductCategoryId = model.ProductCategoryId
+                    ProductPicture = uniqueFileName,
+                    ProductCategoryId = model.ProductCategoryId,
+                    UserId = userId
                 };
-                Productimage(model, product);
                 dbContext.Products.Add(product);
                 dbContext.SaveChanges();
                 retresult = 1;
@@ -118,6 +128,7 @@ namespace ECommerceWeb.Service
                     product.ProductName = model.ProductName;
                     product.Price = model.Price;
                     product.InStock = model.InStock;
+                    product.ProductCategoryId = model.ProductCategoryId;
                     Productimage(model, product);
                     dbContext.Products.Update(product);
                     dbContext.SaveChanges();

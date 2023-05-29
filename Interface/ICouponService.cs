@@ -5,7 +5,8 @@ namespace ECommerceWeb.Interface
 {
     public interface ICouponService
     {
-        List<DiscountCoupon> GetCoupon();
+        IEnumerable<DiscountCoupon> GetCoupon();
+        IQueryable<Guid> CouponProducts(Guid couponId);
         List<Products> GetProductList();
         CouponViewModel GetCouponById(string CouponId);
         void AddUpdateCoupon(CouponViewModel model);

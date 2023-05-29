@@ -5,6 +5,7 @@ namespace ECommerceWeb.Interface
     public interface ICartService
     {
         Task<List<Cart>> GetCartProducts();
+        Products GetProductById(Guid ProductId);
         IQueryable<CartItem> GetCartByUserId(string UserId);
         int SaveCartProduct(Cart cart);
         Task<bool> DeleteCartProduct(Cart model);

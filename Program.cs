@@ -31,6 +31,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.AccessDeniedPath = "/MyHttpStatuses/AccessDenied";
+    options.LoginPath = "/Identity/Account/Login";
 });
 builder.Services.AddMvc();
 builder.Services.AddSession();
@@ -40,6 +41,7 @@ builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddScoped<ICheckoutService, CheckoutService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

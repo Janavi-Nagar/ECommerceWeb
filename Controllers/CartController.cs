@@ -30,18 +30,20 @@ namespace ECommerceWeb.Controllers
             int no = 0;
             if(cart != null)
             {
-                no = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart").Count();
-                ViewBag.cart = cart;
-                ViewBag.total = cart.Sum(item => item.Products.Price * item.Quantity);
+                if (User.Identity.IsAuthenticated)
+                {
+                    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    var UserCart = _cartService.GetCartByUserId(userId);
+                    ViewBag.cart = UserCart;
+                    ViewBag.total = UserCart.Sum(item => item.Products.Price * item.Quantity);
+                }
+                else
+                {
+                    no = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart").Count();
+                    ViewBag.cart = cart;
+                    ViewBag.total = cart.Sum(item => item.Products.Price * item.Quantity);
+                }
             }
-            if (User.Identity.IsAuthenticated)
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var UserCart = _cartService.GetCartByUserId(userId);
-                ViewBag.cart = UserCart;
-                ViewBag.total = UserCart.Sum(item => item.Products.Price * item.Quantity);
-            }
-           
             return View();
         }
 
@@ -50,7 +52,7 @@ namespace ECommerceWeb.Controllers
         public IActionResult Buy(string Pid)
         {
             var ProductId = new Guid(Pid);
-            var data = _productService.GetProductById(ProductId);
+            var data = _cartService.GetProductById(ProductId);
             List<CartItem> cart = new List<CartItem>();
             if (SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart") == null)
             {
@@ -72,7 +74,7 @@ namespace ECommerceWeb.Controllers
                 cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
                 string proid = ProductId.ToString();
                 int index = isExist(proid);
-                if (index != 1)
+                if (index != -1)
                 {
                     cart[index].Quantity++;
                     if (User.Identity.IsAuthenticated)
@@ -81,6 +83,7 @@ namespace ECommerceWeb.Controllers
                         Cart model = new Cart();
                         model.ProductId = ProductId;
                         model.UserId = userId;
+                        model.Quantity = cart[index].Quantity;
                         var ret = _cartService.SaveCartProduct(model);
                     }
                 }
@@ -135,7 +138,7 @@ namespace ECommerceWeb.Controllers
                     return i;
                 }
             }
-            return 1;
+            return -1;
         }
 
     }

@@ -1,22 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using ECommerceWeb.Areas.Identity.Data;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace ECommerceWeb.Models
 {
     public class Order
     {
         [Key]
-        public int OrderId { get; set; }
-        public Guid UserId { get; set; }
-        [ForeignKey(nameof(UserId))]
-        public ApplicationUser UserName { get; set; }
-        public Guid CartId { get; set; }
-        [ForeignKey(nameof(CartId))]
-        public List<Cart> Cart { get; set; }
-        public int TotalPrice { get; set; }
-
-        //public List<OrderItem> OrderItems { get; set; }
+        public Guid OrderId { get; set; }
+        public DateTime OrderCreated_Date { get; set; }
+        public int OrderStatusId { get; set; }
+        public decimal Net { get; set; }
+        public decimal DiscountAmount { get; set; }
+        public decimal GrossAmount { get; set; }
+        
+        public string UserId { get; set; }
+        public virtual IdentityUser User { get; set; }
     }
 }

@@ -20,11 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\" />
+    <None Include="wwwroot\js\Home\product.js" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\js\Home\product.js" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>

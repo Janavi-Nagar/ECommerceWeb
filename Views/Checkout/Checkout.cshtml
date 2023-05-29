@@ -1,0 +1,20 @@
+﻿@model ECommerceWeb.Models.ViewModels.CheckoutViewModel
+@{
+    ViewBag.Title = "Checkout";
+}
+<div class="row g-5">
+    <div class="col-md-5 col-lg-4 order-md-last">
+        <div id="CartProducts"></div>
+          <form class="card p-2" >
+            <div class="input-group">
+            <input type="text" id="CodeApply" class="form-control" placeholder="Promo code"/>
+            <button type="button" id="BtnSave" class="btn btn-secondary">Redeem</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-7 col-lg-8" id="AddressBody">
+        @Html.Partial("_AddAddress",Model)
+    </div>
+</div>
+
+<script src="@Url.Content("~/js/Checkout/Checkout.js")" type="text/javascript"></script>

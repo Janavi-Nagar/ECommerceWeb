@@ -15,7 +15,7 @@ namespace ECommerceWeb.Service
         {
             dbContext = context;
         }
-        public List<DiscountCoupon> GetCoupon()
+        public IEnumerable<DiscountCoupon> GetCoupon()
         {
             return dbContext.DiscountCoupon.ToList();
         }
@@ -23,7 +23,12 @@ namespace ECommerceWeb.Service
         {
             return dbContext.Products.ToList();
         }
-
+        public IQueryable<Guid> CouponProducts(Guid couponId)
+        {
+            return dbContext.CouponProduct
+                        .Where(m => m.CouponId == couponId)
+                        .Select(m => m.ProductId);
+        }
         public CouponViewModel GetCouponById(string CouponId)
         {
             var id = new Guid(CouponId);
@@ -56,10 +61,11 @@ namespace ECommerceWeb.Service
                 };
                 dbContext.DiscountCoupon.Add(coupon);
                 dbContext.SaveChanges();
+                var Coupon = dbContext.DiscountCoupon.FirstOrDefault(m => m.CouponCode == model.CouponCode);
                 List<CouponProduct> data = new List<CouponProduct>();
                 foreach (var i in model.ProductIds)
                 {
-                    data.Add(new CouponProduct { ProductId = i, CouponId = model.CouponId });
+                    data.Add(new CouponProduct { ProductId = i, CouponId = Coupon.CouponId });
                 }
                 dbContext.CouponProduct.AddRange(data);
                 dbContext.SaveChanges();
