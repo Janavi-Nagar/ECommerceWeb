@@ -3,7 +3,7 @@
 
 
 <h4 class="mb-3">Billing address</h4>
-<form class="needs-validation" asp-controller="CartCheckout" asp-action="Checkout" id="CartCheckout">
+<form class="needs-validation" asp-controller="Checkout" asp-action="Checkout" id="CartCheckout">
     <div class="row g-3">
         <div class="col-sm-6">
             <label class="form-label">First name</label>
@@ -89,7 +89,6 @@
 
 <script>
     function PaymentProcess() {
-        debugger
         SetCartjsondata();        
         $("#CartCheckout").submit();
     }

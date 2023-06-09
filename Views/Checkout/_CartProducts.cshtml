@@ -3,12 +3,10 @@
 
 @{
     var sum = 0;
-
     foreach (var item in @Model.Cart)
     {
         sum = sum + item.Products.Price * item.Quantity;
     }
-
 }
 <h5 class="d-flex justify-content-between align-items-center mb-3">
     <span class="text-primary">Your cart</span>

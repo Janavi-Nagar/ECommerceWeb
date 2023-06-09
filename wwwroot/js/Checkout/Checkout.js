@@ -1,5 +1,4 @@
 ﻿$(document).ready(function () {
-    //$('#AddressBody').load('/Checkout/CartCoupon');
     $(".discountamt").hide();
     $.ajax({
             url: "/Checkout/GetCartProduct",
@@ -21,6 +20,7 @@ function SetCartjsondata() {
         })
         $("#CartDetails").val(JSON.stringify(DataList));
     });
+    console.log(DataList);
 }
 $("#BtnSave").click(function (e) {
     var val = $("#CodeApply").val();
@@ -45,7 +45,8 @@ $("#BtnSave").click(function (e) {
                 $("#discount").val(0);
                 $("#Net").val(0);
                 $("#Cart_Discount").text("0");
-
+                console.log($('.discountpercls').val(), $('.amountpercls').val(), $(".Promocode").text(), $(".finalamt").text(), $("#discountamount").val(),
+                    $("#grossamount").val(), $("#discount").val(), $("#Net").val(), $("#Cart_Discount").text());
                 if (data != null) {
                     var discountfinalamt = 0;
                     if (data.cartitem != null) {
@@ -65,6 +66,7 @@ $("#BtnSave").click(function (e) {
                     $("#discount").val(parseFloat(data.coupon.discount).toFixed(2));
                     $("#Net").val(parseFloat(productamt).toFixed(2));
                     $("#Cart_Discount").text(data.coupon.discount.toFixed(2));
+                    console.log(discountfinalamt, (parseFloat(productamt) - discountfinalamt), data.coupon.discount, productamt);
                 } else {
                     alert("Coupon code is not validate");                
                 }

@@ -22,17 +22,17 @@ namespace ECommerceWeb.Service
             return await dbContext.Cart.ToListAsync();
         }
         
-        public IQueryable<CartItem> GetCartByUserId(string UserId)
+        public async Task<List<CartItem>> GetCartByUserId(string UserId)
         {
-            var data = from crt in dbContext.Cart
-                       join prd in dbContext.Products
-                       on crt.ProductId equals prd.ProductId
-                       where crt.UserId == UserId
-                       select new CartItem
-                            {
-                                Quantity = crt.Quantity,
-                                Products = prd
-                            };
+            var data = await (from crt in dbContext.Cart
+                               join prd in dbContext.Products
+                               on crt.ProductId equals prd.ProductId
+                               where crt.UserId == UserId
+                               select new CartItem
+                                    {
+                                        Quantity = crt.Quantity,
+                                        Products = prd
+                                    }).ToListAsync();
             return data;
         }
 

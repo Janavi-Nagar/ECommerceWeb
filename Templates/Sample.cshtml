@@ -1,0 +1,117 @@
+
+<html>
+<head>
+    <title></title>
+    <style>
+          table.CodeTable th,
+          table.CodeTable td {
+            /* width: 100%; */
+            width: 400px;
+            margin-right: 0px;
+            margin-left: auto;
+            white-space: nowrap;
+            /* border: 1px solid black; */
+            border: none;
+            border-collapse: collapse;
+          }
+          .Header {
+            background-color: grey;
+            color: white;
+            padding: 5px;
+          }
+    
+          table.Table {
+            width: 100%;
+          }
+          table.Table,
+          table.Table th,
+          table.Table td {
+            white-space: nowrap;
+            text-align: left;
+            /* border: 1px solid black; */
+            border-collapse: collapse;
+          }
+          table.Table th,
+          table.Table td {
+            padding-top: 12px;
+            padding-bottom: 3px;
+            padding-left: 8px;
+            padding-right: 8px;
+            text-align: right;
+          }
+          table.Table th {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid black; ;
+          }
+
+          table.Table tfoot {
+            padding-top: 4px;
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+          }
+          table.Table tfoot tr,
+          table.Table tfoot td {
+            padding-top: 4px;
+            padding-bottom: 4px;
+          }
+            h1{
+                text-align: center;
+            }
+        </style>
+</head>
+<body>
+    <main style="padding:10pt; font-size:12px">
+       <div><h1>Invoice</h1></div>
+        <div>
+            <h5>@("OrderId : "+ Model.Order.OrderId)</h5>
+            <div>@("OrderDate : "+ Model.Order.OrderCreated_Date.ToString("MM/dd/yyyy"))</div>
+        </div>
+        @if (Model.BillingAddress != null)
+        {
+            <div>
+                @(Model.BillingAddress.FirstName.ToUpper() + " " + Model.BillingAddress.LastName.ToUpper() + ",")<br/>
+                @(Model.BillingAddress.Address + ",")<br/>
+                @(Model.BillingAddress.City + ", " + Model.BillingAddress.State + ",")<br/>
+                @(Model.BillingAddress.Country + ",")<br/>
+                @(Model.BillingAddress.Zip + ".")<br/>
+            </div>
+        }
+        
+        <table class="Table">
+            <tr>
+                <td class="Header">Id</td>
+                <td class="Header" colspan="2">ProductName</td>
+                <td class="Header">Price</td>
+                <td class="Header">Quantity</td>
+                <td class="Header">Total Price</td>
+            </tr>
+            @foreach (var item in Model.OrderDetailsList)
+            {
+                <tr>
+                    <td>
+                        @(Model.OrderDetailsList.IndexOf(item) + 1)
+                    </td>
+                    <td colspan="2">
+                        @(item.Products.ProductName)
+                        @if (item.Discount.ToString() != "0.00")
+                        {
+                            <br />
+                            <small>@("Discount :" + item.Discount + "%")</small>
+                        }
+                    </td>
+                    <td>@item.Products.Price</td>
+                    <td>@((int)item.Quantity)</td>
+                    <td>@(item.UnitPrice*item.Quantity - (item.UnitPrice*item.Quantity * item.Discount/100))</td>
+                </tr>
+            }
+            @*<tr>
+            <td align="right" colspan="5">Sum</td>
+            <td>
+                @Model.Order.GrossAmount
+            </td>
+            </tr>*@
+        </table>
+    </main>
+</body>
+</html>

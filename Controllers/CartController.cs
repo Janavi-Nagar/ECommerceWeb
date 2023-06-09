@@ -24,7 +24,7 @@ namespace ECommerceWeb.Controllers
         }
        
         [Route("cart")]
-        public IActionResult Cart()
+        public async Task<IActionResult> Cart()
         {
             var cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
             int no = 0;
@@ -33,7 +33,7 @@ namespace ECommerceWeb.Controllers
                 if (User.Identity.IsAuthenticated)
                 {
                     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    var UserCart = _cartService.GetCartByUserId(userId);
+                    var UserCart = await _cartService.GetCartByUserId(userId);
                     ViewBag.cart = UserCart;
                     ViewBag.total = UserCart.Sum(item => item.Products.Price * item.Quantity);
                 }

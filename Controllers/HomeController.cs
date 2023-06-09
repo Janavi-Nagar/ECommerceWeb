@@ -24,13 +24,13 @@ namespace ECommerceWeb.Controllers
             _productService = productService;
         }
 
-        public int NoOfCartProduct()
+        public async Task<int> NoOfCartProduct()
         {
             int no = 0;
             if (User.Identity.IsAuthenticated)
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var cart = _cartService.GetCartByUserId(userId);
+                var cart = await _cartService.GetCartByUserId(userId);
                 if (cart != null)
                 {
                     no = cart.Count();
@@ -49,6 +49,11 @@ namespace ECommerceWeb.Controllers
 
         public ActionResult Index()
         {
+            //Cart cart = new Cart();
+            //cart.Quantity = 10;
+            //var mail = new HtmlTemplate<Cart>("Sample", cart);
+            //var htmlstr = mail.GenerateBody();
+            
             return View();
         }
 
@@ -70,7 +75,7 @@ namespace ECommerceWeb.Controllers
                 if (oldRecord != null)
                 {
                     List<CartItem> cart = new List<CartItem>();
-                    foreach (var item in oldRecord)
+                    foreach (var item in oldRecord.Result)
                     {
                         cart.Add(new CartItem { Products = item.Products, Quantity = item.Quantity });
                     }

@@ -1,5 +1,6 @@
-﻿using ECommerceWeb.Areas.Identity.Data;
+﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ECommerceWeb.Models
 {
@@ -22,6 +23,10 @@ namespace ECommerceWeb.Models
         public string Zip { get; set; }
         [StringLength(40)]
         public string Country { get; set; }
-        public string OrderId { get; set; }
+        public string UserId { get; set; }
+        [ForeignKey("UserId")]
+        public IdentityUser User { get; set; }
+        public Guid OrderId { get; set; }
+        public Order Order { get; set; }
     }
 }

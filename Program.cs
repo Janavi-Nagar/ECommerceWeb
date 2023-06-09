@@ -6,6 +6,8 @@ using ECommerceWeb.Areas.Identity.Pages.Account;
 using ECommerceWeb.Interface;
 using ECommerceWeb.Service;
 using ECommerceWeb.Areas.Identity.Data;
+using ECommerceWeb.Models;
+using Razor.Templating.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("UserDbContextConnection") ?? throw new InvalidOperationException("Connection string 'UserDbContextConnection' not found.");
@@ -42,6 +44,7 @@ builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddScoped<ICheckoutService, CheckoutService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

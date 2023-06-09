@@ -25,7 +25,7 @@ namespace ECommerceWeb.Models.ViewModels
         [StringLength(40)]
         public string Country { get; set; }
         public string UserId { get; set; }
-        public IQueryable<CartItem> Cart { get; set; }
+        public List<CartItem> Cart { get; set; }
         public int NoOfCartItems { get; set; }
         public decimal discountamount { get; set; }
         public decimal grossamount { get; set; }

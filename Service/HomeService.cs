@@ -5,7 +5,6 @@ using ECommerceWeb.Models.ViewModels;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ECommerceWeb.Service
 {
@@ -21,7 +20,6 @@ namespace ECommerceWeb.Service
             ProductModel productParameters = new ProductModel();
             var builder = WebApplication.CreateBuilder();
             string conStr = builder.Configuration.GetConnectionString("UserDbContextConnection");
-            DataTable result = new DataTable();
 
             SqlConnection con = new SqlConnection(conStr);
             SqlCommand cmd = new SqlCommand("ProductSearch", con);
@@ -53,13 +51,14 @@ namespace ECommerceWeb.Service
                 Products products1 = new Products();
                 products1.ProductId = new Guid(dataset.Tables[0].Rows[i]["ProductId"].ToString());
                 products1.ProductName = dataset.Tables[0].Rows[i]["ProductName"].ToString();
-                products1.Price = Convert.ToInt16(dataset.Tables[0].Rows[i]["Price"].ToString());
-                products1.InStock = Convert.ToBoolean(dataset.Tables[0].Rows[i]["InStock"].ToString());
+                products1.Price = Convert.ToInt16(dataset.Tables[0].Rows[i]["Price"]);
+                products1.InStock = Convert.ToBoolean(dataset.Tables[0].Rows[i]["InStock"]);
                 products1.ProductPicture = dataset.Tables[0].Rows[i]["ProductPicture"].ToString();
                 products1.ProductCategoryId = new Guid(dataset.Tables[0].Rows[i]["ProductCategoryId"].ToString());
                 products.Add(products1);
             }
             productParameters.products = products;
+            con.Close();
             return productParameters;
         }
     }

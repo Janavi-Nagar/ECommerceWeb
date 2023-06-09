@@ -15,6 +15,9 @@
     <li class="nav-item">
         <a class="nav-link text-white" asp-area="" asp-controller="Role" asp-action="RoleList">Roles</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link text-white" asp-area="Admin" asp-controller="DiscountCoupon" asp-action="DiscountCoupon">Discount Coupons</a>
+    </li>
 }
 @if (SignInManager.IsSignedIn(User) && User.IsInRole("Seller"))
 {

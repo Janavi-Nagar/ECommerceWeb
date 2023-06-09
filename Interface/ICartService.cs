@@ -6,7 +6,7 @@ namespace ECommerceWeb.Interface
     {
         Task<List<Cart>> GetCartProducts();
         Products GetProductById(Guid ProductId);
-        IQueryable<CartItem> GetCartByUserId(string UserId);
+        Task<List<CartItem>> GetCartByUserId(string UserId);
         int SaveCartProduct(Cart cart);
         Task<bool> DeleteCartProduct(Cart model);
     }

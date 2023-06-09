@@ -4,7 +4,6 @@ using ECommerceWeb.Models;
 using ECommerceWeb.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
 
 namespace ECommerceWeb.Controllers
 {
@@ -25,24 +24,23 @@ namespace ECommerceWeb.Controllers
             return View(new CheckoutViewModel());
         }
 
-        public ActionResult GetCartProduct()
+        public async Task<ActionResult> GetCartProduct()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             CheckoutViewModel checkoutView = new CheckoutViewModel();
-            checkoutView.Cart = cartService.GetCartByUserId(userId);
+            checkoutView.Cart = await cartService.GetCartByUserId(userId);
             checkoutView.NoOfCartItems = checkoutView.Cart.Count();
             return PartialView("_CartProducts", checkoutView);
         }
 
-        public ActionResult ValidateCouponCode(string code)
+        public async Task<ActionResult> ValidateCouponCode(string code)
         {
-
             var Coupons = couponService.GetCoupon().FirstOrDefault(m => m.CouponCode == code);
             if (Coupons != null)
             {
                 var Product = couponService.CouponProducts(Coupons.CouponId).ToList();
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var Cart = cartService.GetCartByUserId(userId).ToList();
+                var Cart = await cartService.GetCartByUserId(userId);
                 var model = new
                 {
                     Coupon = Coupons,

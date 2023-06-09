@@ -31,7 +31,7 @@ namespace ECommerceWeb.Service
             dbContext.Order.Add(order);
             dbContext.SaveChanges();
 
-            // Customer Billing address Details
+            //Customer Billing address Details
             CustomerBilling Address = new CustomerBilling
             {
                 Address = model.Address,
@@ -39,9 +39,10 @@ namespace ECommerceWeb.Service
                 State = model.State,
                 Zip = model.Zip,
                 Country = model.Country,
-                OrderId = order.OrderId.ToString(),
+                OrderId = order.OrderId,
+                UserId = model.UserId,
                 FirstName = model.FirstName,
-                LastName = model.LastName
+                LastName = model.LastName,
             };
             dbContext.CustomerBilling.Add(Address);
             dbContext.SaveChanges();

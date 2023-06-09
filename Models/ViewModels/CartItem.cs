@@ -1,7 +1,4 @@
-﻿using ECommerceWeb.Models.ViewModels;
-using System.ComponentModel.DataAnnotations;
-
-namespace ECommerceWeb.Models
+﻿namespace ECommerceWeb.Models
 {
     public class CartItem
     {
