@@ -10,7 +10,7 @@
 });
 
 function SetCartjsondata() {
-    var DataList = [];
+    var DataList = [];//
     $('.ecartitems').each(function (index) {
         DataList.push({
             ProductId: $(this).find('#Cart_ProductId').text(),
@@ -45,15 +45,15 @@ $("#BtnSave").click(function (e) {
                 $("#discount").val(0);
                 $("#Net").val(0);
                 $("#Cart_Discount").text("0");
-                console.log($('.discountpercls').val(), $('.amountpercls').val(), $(".Promocode").text(), $(".finalamt").text(), $("#discountamount").val(),
-                    $("#grossamount").val(), $("#discount").val(), $("#Net").val(), $("#Cart_Discount").text());
                 if (data != null) {
+                    debugger
                     var discountfinalamt = 0;
                     if (data.cartitem != null) {
                         for (var i = 0; i < data.cartitem.length; i++) {
                             var discountamt = ((parseFloat(data.cartitem[i].products.price) * parseFloat(data.coupon.discount)) / 100);
                             discountfinalamt = discountfinalamt + discountamt;
-                            $("#discountper_" + data.cartitem[i].products.productId).text(data.coupon.discount.toFixed(2) + "%");
+                            $(".discountper_" + data.cartitem[i].products.productId).text(discountamt.toFixed(2));
+                            $("#discountper_" + data.cartitem[i].products.productId).text('Discount ' + data.coupon.discount.toFixed(2) + "%");
                             $("#amount_" + data.cartitem[i].products.productId).text("-" + discountamt.toFixed(2));
                         }
                     }
@@ -65,8 +65,7 @@ $("#BtnSave").click(function (e) {
                     $("#grossamount").val((parseFloat(productamt) - discountfinalamt).toFixed(2));
                     $("#discount").val(parseFloat(data.coupon.discount).toFixed(2));
                     $("#Net").val(parseFloat(productamt).toFixed(2));
-                    $("#Cart_Discount").text(data.coupon.discount.toFixed(2));
-                    console.log(discountfinalamt, (parseFloat(productamt) - discountfinalamt), data.coupon.discount, productamt);
+                    console.log(data.coupon.discount);
                 } else {
                     alert("Coupon code is not validate");                
                 }

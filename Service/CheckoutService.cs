@@ -1,10 +1,8 @@
 ﻿using ECommerceWeb.Data;
 using ECommerceWeb.Interface;
-using ECommerceWeb.Migrations;
 using ECommerceWeb.Models;
 using ECommerceWeb.Models.ViewModels;
 using Microsoft.CodeAnalysis;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace ECommerceWeb.Service
@@ -16,10 +14,10 @@ namespace ECommerceWeb.Service
         {
             dbContext = context;
         }
-        public async Task<Guid> AddUpdateAddress(CheckoutViewModel model)
+        public async Task<Guid> PlaceOrder(CheckoutViewModel model)
         {
             // Order data
-            Models.Order order = new Models.Order
+            Order order = new Order
             {
                 OrderCreated_Date = DateTime.Now,
                 OrderStatusId = 0,
@@ -63,12 +61,31 @@ namespace ECommerceWeb.Service
             dbContext.OrderDetails.AddRange(orderDetails);
             dbContext.SaveChanges();
 
+            //Transaction data with pending status
+            Transaction transaction = new Transaction
+            {
+                pi_Id = "null",
+                PaymentStatus = "pending",
+                OrderId = order.OrderId
+            };
+            dbContext.Transaction.Add(transaction);
+            dbContext.SaveChanges();
+
             // delete cart product
             var cartdata = dbContext.Cart.Where(x => orderDetails.Select(x => x.ProductId).Contains(x.ProductId) && x.UserId == model.UserId).ToList();
             dbContext.Cart.RemoveRange(cartdata);
             dbContext.SaveChanges();
 
             return await Task.FromResult(order.OrderId);
+        }
+        public void UpdatePayment(string pi_Id, string status, string userId)
+        {
+            var order = dbContext.Order.FirstOrDefault(m => m.UserId == userId);
+            var transaction = dbContext.Transaction.FirstOrDefault(m => m.OrderId == order.OrderId);
+            transaction.pi_Id = pi_Id;
+            transaction.PaymentStatus = status;
+            dbContext.Transaction.Update(transaction);
+            dbContext.SaveChanges();
         }
 
     }

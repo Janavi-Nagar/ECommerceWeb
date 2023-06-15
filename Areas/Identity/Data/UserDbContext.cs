@@ -37,4 +37,5 @@ public class UserDbContext : IdentityDbContext//<ApplicationUser>
     public DbSet<Order> Order { get; set; }
     public DbSet<OrderDetails> OrderDetails { get; set; }
     public DbSet<CustomerBilling> CustomerBilling { get; set; }
+    public DbSet<Transaction> Transaction { get; set; }
 }

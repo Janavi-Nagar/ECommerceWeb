@@ -97,20 +97,20 @@
                         @if (item.Discount.ToString() != "0.00")
                         {
                             <br />
-                            <small>@("Discount :" + item.Discount + "%")</small>
+                            <small>@("FlatDiscount :" + item.Discount)</small>
                         }
                     </td>
                     <td>@item.Products.Price</td>
                     <td>@((int)item.Quantity)</td>
-                    <td>@(item.UnitPrice*item.Quantity - (item.UnitPrice*item.Quantity * item.Discount/100))</td>
+                    <td>@(item.UnitPrice*item.Quantity - item.Discount*item.Quantity)</td>
                 </tr>
             }
-            @*<tr>
+            <tr>
             <td align="right" colspan="5">Sum</td>
             <td>
                 @Model.Order.GrossAmount
             </td>
-            </tr>*@
+            </tr>
         </table>
     </main>
 </body>

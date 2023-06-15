@@ -2,11 +2,13 @@
 using ECommerceWeb.Interface;
 using ECommerceWeb.Models;
 using ECommerceWeb.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace ECommerceWeb.Controllers
 {
+    [Authorize]
     public class CheckoutController : Controller
     {
         private readonly ICartService cartService;
@@ -56,9 +58,25 @@ namespace ECommerceWeb.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             model.UserId = userId;
-            await checkoutService.AddUpdateAddress(model);
+            await checkoutService.PlaceOrder(model);
             SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", new List<CartItem>());
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Payment", new CheckoutViewModel { grossamount = model.grossamount});
+        }
+        public ActionResult Payment(CheckoutViewModel model)
+        {
+            return View(model);
+        }
+        public ActionResult Success(string payment_intent,string redirect_status)
+        {
+            //?payment_intent=pi_3NIpHYSHpKdU6w510PuP6zaB 
+            //payment_intent_client_secret=pi_3NIpHYSHpKdU6w510PuP6zaB_secret_UI9JhlEDrNsKHieOXUZ5cCfYa
+            //redirect_status=succeeded
+            if (redirect_status == "succeeded")
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                checkoutService.UpdatePayment(payment_intent,redirect_status, userId);
+            }
+            return View();
         }
     }
 }

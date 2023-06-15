@@ -1,17 +1,18 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using ECommerceWeb.Data;
-using Microsoft.AspNetCore.Identity.UI.Services;
+using ECommerceWeb.Areas.Identity.Data;
 using ECommerceWeb.Areas.Identity.Pages.Account;
+using ECommerceWeb.Data;
 using ECommerceWeb.Interface;
 using ECommerceWeb.Service;
-using ECommerceWeb.Areas.Identity.Data;
-using ECommerceWeb.Models;
-using Razor.Templating.Core;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
+using Stripe;
+using CouponService = ECommerceWeb.Service.CouponService;
+using ProductService = ECommerceWeb.Service.ProductService;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("UserDbContextConnection") ?? throw new InvalidOperationException("Connection string 'UserDbContextConnection' not found.");
-
+StripeConfiguration.ApiKey = builder.Configuration["AppSettings:StripeKeys:SecreteKey"];
 builder.Services.AddDbContext<UserDbContext>(options =>
     options.UseSqlServer(connectionString));
 
