@@ -3,23 +3,26 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:40054",
+      "applicationUrl": "https://localhost:40054",
       "sslPort": 44359
     }
   },
   "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    },
     "ECommerceWeb": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "https://localhost:5001",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:7181;http://localhost:5181",
-      "dotnetRunMessages": true
+      "sqlDebugging": true
     },
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

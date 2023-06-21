@@ -81,6 +81,9 @@ namespace ECommerceWeb.Service
         public void UpdatePayment(string pi_Id, string status, string userId)
         {
             var order = dbContext.Order.FirstOrDefault(m => m.UserId == userId);
+            order.OrderStatusId = 1;
+            dbContext.Order.Update(order);
+            dbContext.SaveChanges();
             var transaction = dbContext.Transaction.FirstOrDefault(m => m.OrderId == order.OrderId);
             transaction.pi_Id = pi_Id;
             transaction.PaymentStatus = status;

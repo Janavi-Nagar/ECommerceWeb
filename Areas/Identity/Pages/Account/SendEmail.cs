@@ -19,7 +19,7 @@ namespace ECommerceWeb.Areas.Identity.Pages.Account
                 smtp.EnableSsl = true;
                 System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();
                 NetworkCred.UserName = "janavi4959@gmail.com";
-                NetworkCred.Password = "pjvqyzseelanmw";
+                NetworkCred.Password = "cmmswdmvfjysjvcv";
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials = NetworkCred;
                 smtp.Port = 587;

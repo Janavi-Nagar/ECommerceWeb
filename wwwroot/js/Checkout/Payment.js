@@ -1,7 +1,7 @@
 ﻿// This is your test publishable API key.
 const stripe = Stripe("pk_test_51NIUgkSHpKdU6w51tuiDh0Pc9mpXQY261Q0deczIg4hxaAULUeB26jFHcfbvux3vJURLaUvYCtisbttsxkGp0iKh00iToX5snF");
 //var stripe = Stripe(document.getElementById('stripeId').value);
-var grossamount = document.getElementById('Amount').value;
+var orderid = document.getElementById('Id').value;
 
 let elements;
 
@@ -18,7 +18,7 @@ async function initialize() {
     const response = await fetch("/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ grossamount }),
+        body: JSON.stringify({ orderid }),
     });
     const { clientSecret } = await response.json();
 

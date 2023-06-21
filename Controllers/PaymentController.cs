@@ -1,4 +1,4 @@
-﻿using ECommerceWeb.Models.ViewModels;
+﻿using ECommerceWeb.Data;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Stripe;
@@ -9,13 +9,18 @@ namespace ECommerceWeb.Controllers
     [ApiController]
     public class PaymentController : Controller
     {
+        private readonly UserDbContext dbcontext;
+        public PaymentController(UserDbContext _dbcontext)
+        {
+            dbcontext = _dbcontext;
+        }
         [HttpPost]
         public ActionResult Create(PaymentIntentCreateRequest request)
         {
             var paymentIntentService = new PaymentIntentService();
             var paymentIntent = paymentIntentService.Create(new PaymentIntentCreateOptions
             {
-                Amount = (long?)request.grossamount*100,
+                Amount = (long?)CalculateOrderAmount(request.OrderId),
                 Currency = "inr",
                 AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
                 {
@@ -26,10 +31,17 @@ namespace ECommerceWeb.Controllers
             return Json(new { clientSecret = paymentIntent.ClientSecret });
         }
 
+        private decimal CalculateOrderAmount(string orderid)
+        {
+            var orderId = new Guid(orderid);
+            var grossamount = dbcontext.Order.FirstOrDefault(m => m.OrderId == orderId).GrossAmount;
+            return grossamount;
+        }
+
         public class PaymentIntentCreateRequest
         {
             [JsonProperty("items")]
-            public decimal grossamount { get; set; }
+            public string OrderId { get; set; }
         }
     }
 }

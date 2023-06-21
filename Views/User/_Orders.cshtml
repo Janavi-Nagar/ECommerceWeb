@@ -1,0 +1,45 @@
+﻿@model List<ECommerceWeb.Models.Order>
+
+@{
+    var i = 1;
+}
+<div class="col-md-9 mx-auto">  
+    <div class="card">  
+
+        <div class="card-header bg-success text-white">  
+            <h4>Orders</h4>  
+        </div>  
+        <div class="card-body"> 
+            <table class="table table-bordered">  
+                <thead>  
+                    <tr><th>Id</th>   
+                        <th>Order Created Date</th>
+                        <th>Amount</th>  
+                        <th>Discount</th>
+                        <th>Total Amount</th>
+                        <th>Order Status</th>  
+                    </tr>  
+                </thead>  
+                <tbody>  
+                     @foreach(var item in Model)
+                    {
+                    <tr>
+                        <td> @i @{ i++; }  </td>
+                        <td> @item.OrderCreated_Date </td>  
+                        <td>@item.Net</td>
+                        <td>@item.DiscountAmount </td>
+                        <td>@item.GrossAmount</td>  
+                        <td>@if(item.OrderStatusId == 0){
+                                <div>pending</div>
+                            }
+                            else{
+                                <div>completed</div>
+                            }
+                        </td>
+                    </tr>  
+                    }
+                </tbody>
+            </table>
+        </div>  
+    </div>  
+</div>

@@ -1,0 +1,41 @@
+﻿@model List<ECommerceWeb.Models.CustomerBilling>
+
+<div class="col-md-9 mx-auto">  
+    <div class="card">  
+
+        <div class="card-header bg-success text-white">  
+            <h4>Addresses</h4>  
+        </div>  
+        <div class="card-body"> 
+            <p>  
+                <a asp-action="" class="btn btn-sm btn-success"><i class="fa fa-plus p-2"></i> Add Address</a>  
+            </p> 
+            <table class="table table-bordered">  
+                <thead>  
+                    <tr><th>Address</th>   
+                        <th>City</th>
+                        <th>State</th>  
+                        <th>Country</th>  
+                        <th>Zip</th>  
+                    </tr>  
+                </thead>  
+                <tbody>  
+                     @foreach(var item in Model)
+                    {
+                    <tr>
+                        <td> @item.Address </td>  
+                        <td>@item.City</td>
+                       <td>  @item.State </td>
+                        <td>@item.Country</td>  
+                        <td>@item.Zip</td>
+                        <td>
+                            <a href="@Url.Action("GetProductInfo","Product", new { Id = @item.Id})">Edit </a> /
+                            <a href="/Pending?Id=@item.Id">Delete</a>
+                        </td>
+                    </tr>  
+                    }
+                </tbody>
+            </table>
+        </div>  
+    </div>  
+</div>

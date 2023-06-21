@@ -1,18 +1,16 @@
 ﻿﻿@using Microsoft.Extensions.Configuration
 @inject IConfiguration configuration
-@model ECommerceWeb.Models.ViewModels.CheckoutViewModel
+@model ECommerceWeb.Models.Order
 
 <head>
    <script src="https://js.stripe.com/v3/"></script>
  </head>
  <body>
-     
-      <h6>@Model.grossamount</h6>
 <form id="payment-form">
       <div id="link-authentication-element">
         <!--Stripe.js injects the Link Authentication Element-->
       </div>
-      <input type="hidden" id="Amount" value='@Model.grossamount'>
+      <input type="hidden" id="Id" value='@Model.OrderId.ToString()'>
       <input type="hidden" id="stripeId" value='@configuration["AppSettings:StripeKeys:PublishableKey"]'>
       <div id="payment-element">
         <!--Stripe.js injects the Payment Element-->

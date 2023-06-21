@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<ECommerceWeb.Models.Order>
 @{
     ViewData["Title"] = "Order";
+    var i = 1;
 }
 <h4 class="text-center text-uppercase">Order</h4>
 <p>  
@@ -17,15 +18,12 @@
         </tr>  
     </thead>  
     <tbody> 
-        <tr>
-        @for(var i = 1; i<= Model.Count(); i++)
-        {
-            <td>
-                    @i  
-            </td> 
-        }
         @foreach (var order in Model) 
         {  
+        <tr>
+            <td>
+            @i @{ i++; }
+            </td>
             <td>@order.OrderCreated_Date</td>
 
             <td>@if(order.OrderStatusId == 0){
@@ -39,8 +37,8 @@
             <td>@order.User.Email</td>
             <td>
                  <button id="btnSelect" class="btn btn-sm btn-danger"><a href="/Order/pdf?Ids=@order.OrderId" class="link-light"><i class="fa fa-file-pdf-o"></i></a></button>   
-            </td> 
-        }  
+            </td>
         </tr> 
+        }  
     </tbody>  
 </table> 

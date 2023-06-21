@@ -1,0 +1,39 @@
+﻿@model ECommerceWeb.Areas.Identity.Data.ApplicationUser
+
+<div class="col-md-9 mx-auto">  
+    <div class="card">  
+
+        <div class="card-header bg-success text-white">  
+            <h4>User Info</h4>  
+        </div>  
+        <div class="card-body">  
+            <form enctype="multipart/form-data" asp-action="">  
+                @Html.HiddenFor(x=> x.Id)
+                <div class="row">  
+                    <div class="col-md-6">  
+                        <div class="form-group">  
+                            <label asp-for="FirstName" class="control-label"></label>  
+                            <input asp-for="FirstName" class="form-control" />  
+                            <span asp-validation-for="FirstName" class="text-danger"></span>  
+                        </div> 
+                    </div>
+                    <div class="col-md-6">
+                         <div class="form-group">
+                            <label asp-for="LastName"></label>
+                            <input asp-for="LastName" class="form-control" autocomplete="username" aria-required="true" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                        <div class="form-group">
+                            <label asp-for="Email"></label>
+                            <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+               @* <div class="form-group">  
+                    <input type="submit" value="submit" class="btn btn-sm btn-primary rounded-0 text-uppercase" />  
+                </div>  *@
+            </form>  
+        </div>  
+    </div>  
+</div>  

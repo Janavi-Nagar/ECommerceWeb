@@ -1,0 +1,54 @@
+﻿<div class="container-fluid">
+      <div class="row">
+        <nav class="col-3 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <h2 class="h5"><strong>My account</strong></h2>
+                <ul class="nav flex-column d-grid gap-2 col-sm-12 mx-auto" >
+                    <li class="nav-item">
+                        <button class="btn btn-outline-success col-sm-12 p-2"id="_UserInfo">
+                            <i class="fa fa-user " aria-hidden="true"></i>
+                            User info <span class="sr-only">(current)</span>
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-success col-sm-12 p-2" id="_Addresses">
+                            <i class="fa fa-address-card" aria-hidden="true"></i>
+                            Addresses
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-success col-sm-12 p-2" id="_Orders">
+                            <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                            Orders
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-success col-sm-12 p-2" id="ChangePass">
+                            <i class="fa fa-key" aria-hidden="true"></i>
+                            Change Password
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-9">
+            <div id="partialViews"></div>
+        </main>
+    </div>
+</div>
+<script>
+$(document).ready(function () {
+    $('#partialViews').load( "/User/RenderPartial?inputParam=_UserInfo")
+});
+
+$(".btn").click(function (e) {
+    var link = this.id;
+    $.ajax({
+        type:'get',
+        url: "/User/RenderPartial?inputParam="+link,
+        success: function (result) {
+            $("#partialViews").html(result);                
+        }
+    });
+});
+</script>

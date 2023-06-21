@@ -58,11 +58,11 @@ namespace ECommerceWeb.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             model.UserId = userId;
-            await checkoutService.PlaceOrder(model);
+            var Id = await checkoutService.PlaceOrder(model);
             SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", new List<CartItem>());
-            return RedirectToAction("Payment", new CheckoutViewModel { grossamount = model.grossamount});
+            return RedirectToAction("Payment", new Order { OrderId = Id});
         }
-        public ActionResult Payment(CheckoutViewModel model)
+        public ActionResult Payment(Order model)
         {
             return View(model);
         }

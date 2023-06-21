@@ -18,6 +18,9 @@
     <li class="nav-item">
         <a class="nav-link text-white" asp-area="Admin" asp-controller="DiscountCoupon" asp-action="DiscountCoupon">Discount Coupons</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link text-white" asp-area="" asp-controller="Order" asp-action="Order">Orders</a>
+    </li>
 }
 @if (SignInManager.IsSignedIn(User) && User.IsInRole("Seller"))
 {
@@ -27,4 +30,14 @@
     <li class="nav-item">
         <a class="nav-link text-white" asp-area="" asp-controller="ProductCategory" asp-action="ProductCategoryList">ProductCategory</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link text-white" asp-area="" asp-controller="Order" asp-action="Order">Orders</a>
+    </li>
 }
+@if (SignInManager.IsSignedIn(User) && User.IsInRole("Customer"))
+{
+     <li class="nav-item">
+        <a class="nav-link text-white" asp-area="" asp-controller="Order" asp-action="Order">Orders</a>
+    </li>
+}
+

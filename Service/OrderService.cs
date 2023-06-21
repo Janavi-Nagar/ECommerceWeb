@@ -1,9 +1,7 @@
-﻿using ECommerceWeb.Areas.Identity.Data;
-using ECommerceWeb.Data;
+﻿using ECommerceWeb.Data;
 using ECommerceWeb.Interface;
 using ECommerceWeb.Models;
 using ECommerceWeb.Models.ViewModels;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -61,6 +59,8 @@ namespace ECommerceWeb.Service
                     OrderId = new Guid(dataset.Tables[0].Rows[i]["OrderId"].ToString()),
                     OrderCreated_Date = Convert.ToDateTime(dataset.Tables[0].Rows[i]["OrderCreated_Date"]),
                     OrderStatusId = Convert.ToInt16(dataset.Tables[0].Rows[i]["OrderStatusId"]),
+                    Net = Convert.ToDecimal(dataset.Tables[0].Rows[i]["Net"]),
+                    DiscountAmount = Convert.ToDecimal(dataset.Tables[0].Rows[i]["DiscountAmount"]),
                     GrossAmount = Convert.ToDecimal(dataset.Tables[0].Rows[i]["GrossAmount"]),
                     UserId = dataset.Tables[0].Rows[i]["UserId"].ToString()
                 };
