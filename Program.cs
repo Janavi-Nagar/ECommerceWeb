@@ -47,6 +47,7 @@ builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddScoped<ICheckoutService, CheckoutService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IReCaptchaService, ReCaptchaService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

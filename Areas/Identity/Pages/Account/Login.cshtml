@@ -31,7 +31,11 @@
                     </div>
                 </div>
                 <div>
-                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-success mt-1">Log in</button>
+                    <button id="login-submit" type="submit" 
+                                        class="w-100 btn btn-lg btn-success mt-1 g-recaptcha"
+                                        data-sitekey="6Lfke7cmAAAAAIA58QoJYbU-Mc5mAcGowIWKVSPf" 
+                                        data-callback='onSubmit' 
+                                        data-action='submit'>Log in</button>
                 </div>
                 <div>
                     <p>
@@ -52,4 +56,23 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://www.google.com/recaptcha/api.js?render=6Lfke7cmAAAAAIA58QoJYbU-Mc5mAcGowIWKVSPf"></script>
+    <script>
+   function onSubmit(token) {
+       grecaptcha.ready(function() {
+          grecaptcha.execute('6Lfke7cmAAAAAIA58QoJYbU-Mc5mAcGowIWKVSPf', {action: 'submit'}).then(function(token) {
+              // Add your logic to submit to your backend server here.
+                $.getJSON("/Home/Verify?token=" + token,
+                    function (data) {
+                        if (data) {
+                            document.getElementById("account").submit();
+                        }
+                        else {
+                            alert("error!!");
+                        }
+                 });
+          });
+        });
+   }
+ </script>
 }

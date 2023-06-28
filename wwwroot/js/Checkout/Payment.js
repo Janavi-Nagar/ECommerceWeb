@@ -1,6 +1,5 @@
 ﻿// This is your test publishable API key.
-const stripe = Stripe("pk_test_51NIUgkSHpKdU6w51tuiDh0Pc9mpXQY261Q0deczIg4hxaAULUeB26jFHcfbvux3vJURLaUvYCtisbttsxkGp0iKh00iToX5snF");
-//var stripe = Stripe(document.getElementById('stripeId').value);
+var stripe = Stripe(document.getElementById('stripeId').value);
 var orderid = document.getElementById('Id').value;
 
 let elements;
@@ -50,7 +49,7 @@ async function handleSubmit(e) {
         elements,
         confirmParams: {
             // Make sure to change this to your payment completion page
-            return_url: "https://localhost:7181/Checkout/Success",
+            return_url: "https://localhost:5001/Checkout/Success?orderid=" + orderid,
             receipt_email: emailAddress,
         },
     });

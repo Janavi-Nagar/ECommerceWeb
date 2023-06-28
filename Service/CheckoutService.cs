@@ -78,9 +78,9 @@ namespace ECommerceWeb.Service
 
             return await Task.FromResult(order.OrderId);
         }
-        public void UpdatePayment(string pi_Id, string status, string userId)
+        public void UpdatePayment(string pi_Id, string status, string orderid)
         {
-            var order = dbContext.Order.FirstOrDefault(m => m.UserId == userId);
+            var order = dbContext.Order.FirstOrDefault(m => m.OrderId == new Guid(orderid));
             order.OrderStatusId = 1;
             dbContext.Order.Update(order);
             dbContext.SaveChanges();

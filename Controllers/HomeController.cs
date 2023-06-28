@@ -1,9 +1,7 @@
-﻿using ECommerceWeb.Data;
-using ECommerceWeb.Helpers;
+﻿using ECommerceWeb.Helpers;
 using ECommerceWeb.Interface;
 using ECommerceWeb.Models;
 using ECommerceWeb.Models.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -16,12 +14,15 @@ namespace ECommerceWeb.Controllers
         private readonly IHomeService _homeService;
         private readonly ICartService _cartService;
         private readonly IProductService _productService;
-        public HomeController(ILogger<HomeController> logger, IHomeService homeService, ICartService cartService, IProductService productService)
+        private readonly IReCaptchaService _reCaptchaService;
+        
+        public HomeController(ILogger<HomeController> logger, IHomeService homeService, ICartService cartService, IProductService productService, IReCaptchaService reCaptchaService)
         {
             _logger = logger;
             _homeService = homeService;
             _cartService = cartService;
             _productService = productService;
+            _reCaptchaService = reCaptchaService;
         }
 
         public async Task<int> NoOfCartProduct()
@@ -121,6 +122,18 @@ namespace ECommerceWeb.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+        [HttpGet]
+        [ValidateGoogleCaptcha]
+        public async Task<JsonResult> Verifyforsignup(string token)
+        {
+            return Json("success");
+        }
+        [HttpGet]
+        public async Task<JsonResult> Verify(string token)
+        {
+            var verified = await _reCaptchaService.Varification(token);
+            return Json(verified);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

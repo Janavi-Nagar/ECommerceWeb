@@ -66,7 +66,7 @@ namespace ECommerceWeb.Controllers
         {
             return View(model);
         }
-        public ActionResult Success(string payment_intent,string redirect_status)
+        public ActionResult Success(string orderid, string payment_intent,string redirect_status)
         {
             //?payment_intent=pi_3NIpHYSHpKdU6w510PuP6zaB 
             //payment_intent_client_secret=pi_3NIpHYSHpKdU6w510PuP6zaB_secret_UI9JhlEDrNsKHieOXUZ5cCfYa
@@ -74,7 +74,7 @@ namespace ECommerceWeb.Controllers
             if (redirect_status == "succeeded")
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                checkoutService.UpdatePayment(payment_intent,redirect_status, userId);
+                checkoutService.UpdatePayment(payment_intent,redirect_status, orderid);
             }
             return View();
         }

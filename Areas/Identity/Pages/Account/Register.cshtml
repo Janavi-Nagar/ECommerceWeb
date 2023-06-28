@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Register";
 }
-
 <div class="d-flex justify-content-center">
     <div class="col-md-4">
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
@@ -41,11 +40,50 @@
                 </select>
                 <span asp-validation-for="Input.UserRole" class="text-danger"></span>
             </div>
-             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-success mt-2">Register</button>
+            <br>
+             <div id="example3" data-callback="recaptchaCallback"></div>
+             @* <div class="g-recaptcha" data-callback="recaptchaCallback" data-sitekey="6Le8mbwmAAAAABc3pM_DjSs0aiIRvLgzdqWAOJLD"></div>*@
+            <br>
+            <input type="hidden" id="hfCaptcha"/>
+            <span id="rfvCaptcha" class="error" style="display:none">Captcha validation is required.</span>
+            <br/>
+            <button id="registerSubmit" type="button" class="w-100 btn btn-lg btn-success mt-2"  disabled>Register</button>
         </form>
+        <!-- POSTs back to the page's URL upon submit with a g-recaptcha-response POST parameter. -->
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+       
+      function recaptchacallback(response) {
+         $('#registerSubmit').removeAttr('disabled');
+         $('#registerSubmit').click(function(){
+             $.ajax({
+                type: 'GET',
+                url: "/Home/Verifyforsignup?token=" + response,
+                success:function(data){
+                    document.getElementById("registerForm").submit();
+                }
+            });
+        });
+      };
+         
+      var onloadCallback = function() {
+        // renders the html element with id 'example1' as a recaptcha widget.
+        // the id of the recaptcha widget is assigned to 'widgetid1'.
+        grecaptcha.render('example3', {
+          'sitekey' : '6Le8mbwmAAAAABc3pM_DjSs0aiIRvLgzdqWAOJLD',
+          'callback' : verifyCallback,
+        });
+      };
+      var verifyCallback = function(response) {
+        recaptchacallback(response);
+      };
+    </script>
+  <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+        async defer>
+    </script>
+    
 }
